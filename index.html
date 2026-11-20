@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English Shadowing – تدريب المحادثة اليومي</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--ink:#1f2328;--mute:#6b6f76;--line:#e7e1d6;--acc:#1f6f5c;--acc2:#e8f3ef;--warn:#b5651d;--warn2:#fbf0e4}
+@media (prefers-color-scheme:dark){:root{--bg:#16181b;--card:#1f2226;--ink:#eceae6;--mute:#9a9ea5;--line:#2e3237;--acc:#5cc3a6;--acc2:#1d2e29;--warn:#e7a35e;--warn2:#2e2519}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:1.5rem;margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 18px}
+.days{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.days button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 11px;font:inherit;font-size:.9rem;cursor:pointer}
+.days button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.days button.done::after{content:" ✓"}
+.days button.today{outline:2px solid var(--warn);outline-offset:1px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.card h2{font-size:1.15rem;margin:0 0 10px}
+.en{font-family:Inter,system-ui,sans-serif;direction:ltr;text-align:left}
+.tip{background:var(--warn2);border-color:transparent}
+.tip b{color:var(--warn)}
+.ctrls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.btn{border:0;background:var(--acc);color:#fff;border-radius:10px;padding:8px 14px;font:inherit;cursor:pointer}
+.btn.ghost{background:var(--acc2);color:var(--acc)}
+label{font-size:.9rem;color:var(--mute);display:flex;align-items:center;gap:6px}
+.line{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.line:first-child{border-top:0}
+.line.active{background:var(--acc2);border-radius:10px}
+.play{flex:none;width:36px;height:36px;border-radius:50%;border:0;background:var(--acc2);color:var(--acc);cursor:pointer;font-size:14px}
+.txt{flex:1}
+.spk{font-size:.75rem;color:var(--mute);font-family:Inter,sans-serif;direction:ltr;text-align:left}
+.line .en{font-size:1.08rem}
+.ar{color:var(--mute);font-size:.92rem}
+.hideEn .line .en{filter:blur(6px)}
+.hideEn .line .en:hover{filter:none}
+.hideAr .line .ar{display:none}
+ol.steps{margin:0;padding-inline-start:20px}
+ol.steps li{margin-bottom:6px}
+.flash{border:1px dashed var(--line);border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer}
+.flash .en{display:none;margin-top:6px;font-weight:600}
+.flash.open .en{display:block}
+.flash small{color:var(--mute)}
+.note{font-size:.85rem;color:var(--mute)}
+.mic{flex:none;width:36px;height:36px;border-radius:50%;border:0;background:var(--warn2);color:var(--warn);cursor:pointer;font-size:15px}
+.mic.on{background:#d9534f;color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.6}}
+.fb{margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--bg);font-size:.92rem}
+.fb .w{font-family:Inter,sans-serif;direction:ltr;display:inline-block;margin:0 3px;padding:0 4px;border-radius:5px}
+.ok{background:#d6f0e3;color:#14583f}.bad{background:#f9d9d6;color:#8a2219;text-decoration:underline wavy}.miss{background:#f9d9d6;color:#8a2219;opacity:.75}
+@media (prefers-color-scheme:dark){.ok{background:#1d3b31;color:#8fe0c0}.bad,.miss{background:#45221f;color:#ffb3aa}}
+.fb ul{margin:6px 0 0;padding-inline-start:18px}
+.score{font-weight:700}
+.miswarn{background:var(--warn2);border-radius:10px;padding:10px;font-size:.9rem;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>تدريب شادوينغ يومي 🎧</h1>
+  <p class="sub">كل يوم محادثة جديدة + مراجعة للي أخدته قبل يوم و ٣ أيام و ٧ أيام، مشان ما تنسى.</p>
+  <div class="days" id="days"></div>
+
+  <div class="card" id="review"></div>
+
+  <div class="card">
+    <h2 id="title"></h2>
+    <div class="ctrls">
+      <button class="btn" id="playAll">▶ شغّل الكل مع وقفات للتكرار</button>
+      <button class="btn ghost" id="stop">■ وقف</button>
+      <label>السرعة <input type="range" id="rate" min="0.5" max="1.1" step="0.05" value="0.8"><span id="rv">0.8</span></label>
+      <label><input type="checkbox" id="hideEn"> خبّي الإنكليزي</label>
+      <label><input type="checkbox" id="hideAr"> خبّي العربي</label>
+    </div>
+    <div class="miswarn" id="micwarn" hidden></div>
+    <div id="lines"></div>
+    <p class="note" id="nov" hidden>متصفحك ما فيه صوت إنكليزي. جرّب تفتح الصفحة من كروم أو سفاري.</p>
+  </div>
+
+  <div class="card tip"><b>نصيحة اللفظ لليوم:</b> <span id="tip"></span></div>
+
+  <div class="card">
+    <h2>كيف تتدرب اليوم (١٥ دقيقة)</h2>
+    <ol class="steps">
+      <li><b>اسمع بس</b> مرتين على سرعة 0.7، وانت عم تقرا العربي.</li>
+      <li><b>اسمع واقرا الإنكليزي</b> بنفس الوقت، بدون ما تحكي.</li>
+      <li><b>شادوينغ مع النص:</b> شغّل "الكل مع وقفات" وكرر كل جملة بالوقفة، قلّد النغمة والسرعة مو بس الكلمات.</li>
+      <li><b>شادوينغ بدون نص:</b> علّم "خبّي الإنكليزي" وعيد. ارفع السرعة لـ 0.9.</li>
+      <li><b>🎤 خلّي المدرّب يسمعك:</b> اضغط 🎤 جنب كل جملة وقولها. بيعلّملك الكلمات الغلط بالأحمر وبيقلك كيف تصلّحها. ما تنتقل للجملة يلي بعدها لحتى تاخد ٩٠٪ أو أكتر.</li>
+      <li>اضغط ✓ تحت لما تخلص.</li>
+    </ol>
+    <p style="margin-top:12px"><button class="btn" id="done">✓ خلصت درس اليوم</button></p>
+  </div>
+</div>
+<script>
+const L = [{"t": "Introducing yourself", "ar": "التعريف بنفسك", "tip": "صوت th بكلمات مثل the / this / that: حط لسانك بين سنانك وطلّع الصوت، لا تقول (ذ) قوية ولا (د) ولا (ز).", "lines": [["A", "Hi, I'm Sam. Nice to meet you.", "مرحبا، أنا سام. تشرفت فيك."], ["B", "Nice to meet you too. I'm Rami.", "وأنا كمان تشرفت. أنا رامي."], ["A", "Where are you from?", "من وين إنت؟"], ["B", "I'm from Damascus, but I live here now.", "أنا من الشام، بس عايش هون هلق."], ["A", "What do you do?", "شو بتشتغل؟"], ["B", "I work in sales. How about you?", "بشتغل بالمبيعات. وإنت؟"], ["A", "I'm a teacher.", "أنا أستاذ."]], "keys": [["Nice to meet you.", "تشرفت فيك."], ["Where are you from?", "من وين إنت؟"], ["What do you do?", "شو بتشتغل؟"], ["How about you?", "وإنت؟ (ورجّع السؤال)"]]}, {"t": "Ordering coffee", "ar": "طلب قهوة", "tip": "P مو B: بكلمة please و pay طلّع نفَس هوا خفيف مع حرف P. حط إيدك قدام تمك وحس بالهوا.", "lines": [["Barista", "Hi! What can I get for you?", "أهلين! شو بتحب جيبلك؟"], ["You", "Can I get a medium latte, please?", "فيني آخد لاتيه وسط لو سمحت؟"], ["Barista", "Sure. For here or to go?", "أكيد. هون ولا تيك أواي؟"], ["You", "To go, please.", "تيك أواي لو سمحت."], ["Barista", "Anything else?", "بدك شي تاني؟"], ["You", "No, that's it. How much is it?", "لا، هيك بس. قديش حقها؟"], ["Barista", "That's four fifty.", "أربعة ونص."]], "keys": [["What can I get for you?", "شو بتحب جيبلك؟"], ["Can I get a latte, please?", "فيني آخد لاتيه لو سمحت؟"], ["For here or to go?", "هون ولا تيك أواي؟"], ["No, that's it.", "لا، هيك بس."]]}, {"t": "Asking for directions", "ar": "السؤال عن الطريق", "tip": "لا تحط ألف قبل st: قول straight مو (إسْتريت)، و station مو (إسْتيشن). ابدأ بالـ S مباشرة.", "lines": [["You", "Excuse me, could you help me?", "لو سمحت، فيك تساعدني؟"], ["You", "I'm looking for the train station.", "عم دوّر على محطة القطار."], ["Local", "Sure. Go straight and turn left at the lights.", "أكيد. روح دغري ولف شمال عند الإشارة."], ["You", "Is it far from here?", "بعيدة من هون؟"], ["Local", "No, it's about five minutes on foot.", "لا، تقريباً خمس دقايق مشي."], ["You", "Thanks a lot!", "شكراً كتير!"], ["Local", "No problem.", "ولا يهمك."]], "keys": [["I'm looking for the train station.", "عم دوّر على محطة القطار."], ["Go straight and turn left.", "روح دغري ولف شمال."], ["Is it far from here?", "بعيدة من هون؟"], ["It's five minutes on foot.", "خمس دقايق مشي."]]}, {"t": "Shopping for clothes", "ar": "شراء تياب", "tip": "وصل الكلمات ببعض: try it on بتنلفظ متل كلمة وحدة (تراي-إي-تون). الإنكليز ما بيوقفوا بين الكلمات.", "lines": [["Staff", "Can I help you find something?", "فيني ساعدك تلاقي شي؟"], ["You", "I'm just looking, thanks.", "عم اتفرج بس، شكراً."], ["You", "Actually, do you have this in a medium?", "بصراحة، عندك هاد قياس وسط؟"], ["Staff", "Let me check. Yes, here you go.", "خليني شوف. إي، تفضل."], ["You", "Can I try it on?", "فيني جربه؟"], ["Staff", "Of course. The fitting room is over there.", "أكيد. غرفة القياس هونيك."], ["You", "It fits well. I'll take it.", "جاي عليّ مظبوط. باخده."]], "keys": [["I'm just looking, thanks.", "عم اتفرج بس، شكراً."], ["Do you have this in a medium?", "عندك هاد قياس وسط؟"], ["Can I try it on?", "فيني جربه؟"], ["I'll take it.", "باخده."]]}, {"t": "At the supermarket", "ar": "بالسوبرماركت", "tip": "V مو F: بكلمة very و have عض شفتك التحتانية بسنانك الفوقانية وطلّع صوت (اهتزاز)، أما F بلا صوت.", "lines": [["You", "Excuse me, where can I find the rice?", "لو سمحت، وين بلاقي الرز؟"], ["Staff", "It's in aisle three, next to the pasta.", "بالممر رقم تلاتة، جنب المعكرونة."], ["You", "Do you have any fresh bread?", "عندكن خبز طازة؟"], ["Staff", "Sorry, we're out of bread today.", "آسف، خلص الخبز اليوم."], ["You", "OK. Can I pay by card?", "ماشي. فيني ادفع بالبطاقة؟"], ["Staff", "Yes, just tap it here.", "إي، بس قرّبها لهون."], ["Staff", "Would you like a bag?", "بدك كيس؟"], ["You", "No thanks, I've got one.", "لا شكراً، معي واحد."]], "keys": [["Where can I find the rice?", "وين بلاقي الرز؟"], ["We're out of bread.", "خلص الخبز عنا."], ["Can I pay by card?", "فيني ادفع بالبطاقة؟"], ["No thanks, I've got one.", "لا شكراً، معي واحد."]]}, {"t": "Making plans with a friend", "ar": "ترتيب طلعة مع صاحبك", "tip": "بالحكي السريع want to بتصير wanna، و going to بتصير gonna. افهمها لما تسمعها حتى لو ما استعملتها.", "lines": [["Friend", "Are you free this weekend?", "فاضي هالويكند؟"], ["You", "I think so. Why?", "بظن إي. ليش؟"], ["Friend", "Do you want to grab dinner on Saturday?", "بدك نطلع ناكل عشا يوم السبت؟"], ["You", "Sounds good! What time?", "فكرة حلوة! أيمتى؟"], ["Friend", "How about seven?", "شو رأيك الساعة سبعة؟"], ["You", "Perfect. See you then!", "ممتاز. منشوفك وقتها!"]], "keys": [["Are you free this weekend?", "فاضي هالويكند؟"], ["Do you want to grab dinner?", "بدك نطلع ناكل عشا؟"], ["Sounds good!", "فكرة حلوة!"], ["How about seven?", "شو رأيك الساعة سبعة؟"]]}, {"t": "On the phone", "ar": "عالتلفون", "tip": "thirteen ضغطتها عالآخر (ثيرتين)، و thirty ضغطتها عالأول (ثيرتي). نفس الشي fourteen/forty وغيرها.", "lines": [["You", "Hello, this is Rami. Can I speak to Sara, please?", "ألو، أنا رامي. فيني احكي مع سارة لو سمحت؟"], ["Other", "Sorry, she's not here right now. Can I take a message?", "آسفة، هي مو هون هلق. بدك تترك رسالة؟"], ["You", "Yes, could you ask her to call me back?", "إي، فيكي تقوليلها ترجع تتصل فيني؟"], ["Other", "Sure. What's your number?", "أكيد. شو رقمك؟"], ["You", "It's oh-nine-four, two-five-six, thirteen thirty.", "هو ٠٩٤ ٢٥٦ ١٣٣٠."], ["Other", "Got it. I'll let her know.", "تمام. رح خبّرها."], ["You", "Thanks. Bye!", "شكراً. باي!"]], "keys": [["This is Rami.", "أنا رامي (عالتلفون)."], ["Can I take a message?", "بدك تترك رسالة؟"], ["Could you ask her to call me back?", "فيكي تقوليلها ترجع تتصل فيني؟"], ["I'll let her know.", "رح خبّرها."]]}, {"t": "At the doctor", "ar": "عند الدكتور", "tip": "I've had = I have had. لما بدك تقول شي صار من مدة ولسا مستمر استعمل I've had... for: I've had a cold for two days.", "lines": [["Doctor", "What seems to be the problem?", "شو المشكلة؟"], ["You", "I've had a headache for three days.", "صرلي تلت تيام راسي عم يوجعني."], ["Doctor", "Do you have a fever?", "عندك حرارة؟"], ["You", "A little, yes. And I feel tired.", "شوي، إي. وحاسس حالي تعبان."], ["Doctor", "OK. Take this medicine twice a day.", "تمام. خود هالدوا مرتين باليوم."], ["You", "Should I come back if it doesn't get better?", "لازم ارجع إذا ما تحسنت؟"], ["Doctor", "Yes, come back next week if you still feel sick.", "إي، ارجع الجمعة الجاية إذا لسا مريض."]], "keys": [["What seems to be the problem?", "شو المشكلة؟"], ["I've had a headache for three days.", "صرلي تلت تيام راسي عم يوجعني."], ["I feel tired.", "حاسس حالي تعبان."], ["Take it twice a day.", "خوده مرتين باليوم."]]}, {"t": "At a restaurant", "ar": "بالمطعم", "tip": "I'd like أدب من I want. الـ d خفيفة كتير، تقريباً ما بتنسمع: (آيد لايك).", "lines": [["Waiter", "Are you ready to order?", "جاهزين تطلبوا؟"], ["You", "Yes. I'd like the chicken salad, please.", "إي. بدي سلطة الدجاج لو سمحت."], ["Waiter", "Anything to drink?", "شي تشربوه؟"], ["You", "Just water, thanks.", "بس مي، شكراً."], ["Waiter", "How was everything?", "كيف كان كل شي؟"], ["You", "It was delicious. Could we get the check, please?", "كان طيب كتير. فينا ناخد الحساب لو سمحت؟"], ["Waiter", "Sure, I'll be right back.", "أكيد، هلق برجع."]], "keys": [["Are you ready to order?", "جاهزين تطلبوا؟"], ["I'd like the chicken salad, please.", "بدي سلطة الدجاج لو سمحت."], ["Just water, thanks.", "بس مي، شكراً."], ["Could we get the check, please?", "فينا ناخد الحساب لو سمحت؟"]]}, {"t": "Small talk", "ar": "دردشة خفيفة", "tip": "isn't it? بآخر الجملة لما بدك الشخص يوافقك: نزّل صوتك بالآخر. إذا رفعته بتصير سؤال حقيقي.", "lines": [["A", "How was your weekend?", "كيف كان الويكند تبعك؟"], ["B", "It was great, thanks. I went hiking. How about yours?", "كان حلو، شكراً. رحت مشي بالجبل. وإنت؟"], ["A", "Pretty quiet. I just stayed home and relaxed.", "هادي. قعدت بالبيت وارتحت."], ["B", "Nice. It's really cold today, isn't it?", "حلو. اليوم برد كتير، مو هيك؟"], ["A", "I know! I can't wait for spring.", "والله! مشتاق للربيع."]], "keys": [["How was your weekend?", "كيف كان الويكند تبعك؟"], ["Pretty quiet.", "هادي (ما صار شي)."], ["It's really cold today, isn't it?", "اليوم برد كتير، مو هيك؟"], ["I can't wait for spring.", "مشتاق للربيع / ناطر الربيع."]]}, {"t": "At work", "ar": "بالشغل", "tip": "work (وِرك) مو walk (ووك). بـ work الصوت بالنص متل (ِر) قصيرة، وبـ walk فمك مدوّر.", "lines": [["Colleague", "Good morning! Did you get my email?", "صباح الخير! وصلك إيميلي؟"], ["You", "Yes, I did. I'll get back to you by this afternoon.", "إي وصلني. برد عليك قبل العصر."], ["Colleague", "Great. Can we have a quick meeting at two?", "ممتاز. فينا نعمل اجتماع سريع الساعة تنتين؟"], ["You", "Two works for me.", "الساعة تنتين بتناسبني."], ["Colleague", "Thanks. Let me know if you need anything.", "شكراً. خبّرني إذا بدك شي."], ["You", "Will do.", "أكيد."]], "keys": [["Did you get my email?", "وصلك إيميلي؟"], ["I'll get back to you.", "برد عليك (بعدين)."], ["Two works for me.", "الساعة تنتين بتناسبني."], ["Let me know if you need anything.", "خبّرني إذا بدك شي."]]}, {"t": "At the airport", "ar": "بالمطار", "tip": "aisle الـ s ما بتنلفظ: (آيل). و island كمان: (آيلاند).", "lines": [["Agent", "Can I see your passport, please?", "فيني شوف جوازك لو سمحت؟"], ["You", "Here you go.", "تفضل."], ["Agent", "Are you checking any bags?", "عندك شنط بدك تشحنها؟"], ["You", "Just one.", "وحدة بس."], ["Agent", "Would you like a window or an aisle seat?", "بدك مقعد جنب الشباك ولا عالممر؟"], ["You", "A window seat, please.", "جنب الشباك لو سمحت."], ["Agent", "Here's your boarding pass. Boarding starts at nine thirty.", "هي بطاقة الصعود. الصعود بيبلش الساعة تسعة ونص."]], "keys": [["Here you go.", "تفضل."], ["Are you checking any bags?", "عندك شنط للشحن؟"], ["A window seat, please.", "مقعد جنب الشباك لو سمحت."], ["Here's your boarding pass.", "هي بطاقة الصعود."]]}, {"t": "At a hotel", "ar": "بالفندق", "tip": "ضغطة الكلمة مهمة: inCLUDed و reserVAtion. إذا حطيت الضغطة غلط ممكن ما يفهموك حتى لو الحروف صح.", "lines": [["You", "Hi, I have a reservation under the name Haddad.", "مرحبا، عندي حجز باسم حداد."], ["Clerk", "Welcome! Let me find it. Two nights, right?", "أهلاً! خليني لاقيه. ليلتين، صح؟"], ["You", "That's right. What time is check-out?", "صح. أيمتى وقت تسليم الغرفة؟"], ["Clerk", "Check-out is at eleven. Here's your key card.", "التسليم الساعة ١١. هي بطاقة الغرفة."], ["You", "Is breakfast included?", "الفطور ضمن السعر؟"], ["Clerk", "Yes, it's served from seven to ten.", "إي، بينقدم من سبعة لعشرة."]], "keys": [["I have a reservation under the name Haddad.", "عندي حجز باسم حداد."], ["That's right.", "صح."], ["What time is check-out?", "أيمتى وقت تسليم الغرفة؟"], ["Is breakfast included?", "الفطور ضمن السعر؟"]]}, {"t": "Hobbies", "ar": "الهوايات", "tip": "استعمل الاختصارات: I'm مو I am، و you'll مو you will. هيك بيطلع حكيك طبيعي أكتر.", "lines": [["A", "What do you like to do in your free time?", "شو بتحب تعمل بوقت فراغك؟"], ["B", "I'm really into football. I play every Friday.", "أنا كتير بحب الفوتبول. بلعب كل جمعة."], ["A", "That's cool! I'm more of a reader.", "حلو! أنا أكتر شي بحب القراية."], ["B", "Oh, really? What kind of books do you like?", "عنجد؟ شو نوع الكتب يلي بتحبها؟"], ["A", "Mostly novels. I'm reading a good one right now.", "غالباً روايات. عم اقرا وحدة حلوة هلق."], ["B", "You'll have to tell me about it sometime.", "لازم تحكيلي عنها شي مرة."]], "keys": [["What do you like to do in your free time?", "شو بتحب تعمل بوقت فراغك؟"], ["I'm really into football.", "أنا كتير بحب الفوتبول."], ["I'm more of a reader.", "أنا أكتر شي بحب القراية."], ["What kind of books do you like?", "شو نوع الكتب يلي بتحبها؟"]]}];
+const START = new Date(2026,10,19); // Day 1 = 19 Nov 2026
+const msDay = 86400000;
+const todayIdx = Math.max(0, Math.floor((new Date().setHours(0,0,0,0) - START.getTime())/msDay)) % L.length;
+let cur = todayIdx;
+let done = {};
+try { done = JSON.parse(localStorage.getItem("sh_done")||"{}"); } catch(e){}
+const synth = window.speechSynthesis;
+let voice = null;
+function pickVoice(){
+  if(!synth) return;
+  const vs = synth.getVoices().filter(v=>/^en[-_]/i.test(v.lang));
+  voice = vs.find(v=>/en[-_]US/i.test(v.lang) && /Google|Samantha|Natural|Aria|Jenny/i.test(v.name)) || vs.find(v=>/en[-_]US/i.test(v.lang)) || vs[0] || null;
+  document.getElementById("nov").hidden = !!voice || synth.getVoices().length===0;
+}
+if(synth){ pickVoice(); synth.onvoiceschanged = pickVoice; } else document.getElementById("nov").hidden=false;
+const rate = document.getElementById("rate");
+rate.oninput = ()=> document.getElementById("rv").textContent = rate.value;
+function say(text, onend){
+  if(!synth){ onend&&onend(); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  if(voice) u.voice = voice;
+  u.lang = voice ? voice.lang : "en-US";
+  u.rate = parseFloat(rate.value);
+  u.onend = ()=> onend && onend();
+  synth.speak(u);
+}
+let running = false;
+function stopAll(){ running=false; synth && synth.cancel(); document.querySelectorAll(".line.active").forEach(e=>e.classList.remove("active")); }
+document.getElementById("stop").onclick = stopAll;
+document.getElementById("playAll").onclick = ()=>{
+  stopAll(); running = true;
+  const rows = [...document.querySelectorAll("#lines .line")];
+  let i = 0;
+  const step = ()=>{
+    if(!running || i>=rows.length){ stopAll(); return; }
+    rows.forEach(r=>r.classList.remove("active")); rows[i].classList.add("active");
+    const text = L[cur].lines[i][1];
+    const t0 = Date.now();
+    say(text, ()=>{ const gap = Math.max(1500, (Date.now()-t0)*1.3); i++; setTimeout(step, gap); });
+  };
+  step();
+};
+["hideEn","hideAr"].forEach(id=>{
+  const el = document.getElementById(id);
+  el.onchange = ()=> document.getElementById("lines").classList.toggle(id, el.checked);
+});
+function esc(s){ return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function renderDays(){
+  const d = document.getElementById("days"); d.innerHTML="";
+  L.forEach((x,i)=>{
+    const b = document.createElement("button");
+    b.textContent = "يوم " + (i+1);
+    if(i===cur) b.classList.add("on");
+    if(i===todayIdx) b.classList.add("today");
+    if(done[i]) b.classList.add("done");
+    b.title = x.ar;
+    b.onclick = ()=>{ stopAll(); cur=i; render(); };
+    d.appendChild(b);
+  });
+}
+function renderReview(){
+  const box = document.getElementById("review");
+  const back = [1,3,7].map(k=>cur-k).filter(k=>k>=0);
+  if(!back.length){ box.innerHTML = '<h2>مراجعة</h2><p class="note">هاد أول يوم، ما في مراجعة بعد. من بكرا رح تبلش المراجعة هون قبل الدرس الجديد.</p>'; return; }
+  let h = '<h2>🔁 مراجعة قبل الدرس (لا تنسى!)</h2><p class="note">اقرا العربي، قول الجملة بالإنكليزي بصوت عالي، بعدين اضغط لتشوف الجواب وتسمعه.</p>';
+  back.forEach(k=>{
+    L[k].keys.forEach(([en,ar])=>{
+      h += `<div class="flash" data-en="${esc(en)}"><small>يوم ${k+1} · ${esc(L[k].ar)}</small><div style="display:flex;gap:8px;align-items:center"><button class="mic" aria-label="speak">🎤</button><span>${esc(ar)}</span></div><div class="en">${esc(en)}</div><div class="fb" hidden></div></div>`;
+    });
+  });
+  box.innerHTML = h;
+  box.querySelectorAll(".flash").forEach(f=>{
+    f.onclick = (e)=>{ if(e.target.closest(".mic")||e.target.closest(".fb")) return; f.classList.add("open"); synth && synth.cancel(); say(f.dataset.en); };
+    f.querySelector(".mic").onclick = (e)=>{ e.stopPropagation(); listen(f.dataset.en, e.currentTarget, f.querySelector(".fb"), ()=>f.classList.add("open")); };
+  });
+}
+function render(){
+  const x = L[cur];
+  document.getElementById("title").innerHTML = `يوم ${cur+1}: ${esc(x.ar)} <span class="en" style="display:inline;color:var(--mute);font-weight:400">· ${esc(x.t)}</span>`;
+  document.getElementById("tip").textContent = x.tip;
+  document.getElementById("lines").innerHTML = x.lines.map(([s,en,ar],i)=>
+    `<div class="line"><button class="play" data-i="${i}" aria-label="play">▶</button><button class="mic" data-i="${i}" aria-label="speak">🎤</button><div class="txt"><div class="spk">${esc(s)}</div><div class="en">${esc(en)}</div><div class="ar">${esc(ar)}</div><div class="fb" hidden></div></div></div>`).join("");
+  document.querySelectorAll(".play").forEach(b=> b.onclick = ()=>{ stopAll(); say(x.lines[+b.dataset.i][1]); });
+  document.querySelectorAll("#lines .mic").forEach(b=> b.onclick = ()=>{ const i=+b.dataset.i; listen(x.lines[i][1], b, b.parentElement.querySelector(".fb")); });
+  document.getElementById("done").textContent = done[cur] ? "✓ خلصته" : "✓ خلصت درس اليوم";
+  renderDays(); renderReview();
+}
+document.getElementById("done").onclick = ()=>{ done[cur]=1; try{ localStorage.setItem("sh_done", JSON.stringify(done)); }catch(e){} render(); };
+// ===== المدرّب: يسمع ويصحّح =====
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const NUM = {"0":"zero","1":"one","2":"two","3":"three","4":"four","5":"five","6":"six","7":"seven","8":"eight","9":"nine","10":"ten","11":"eleven","12":"twelve","13":"thirteen","30":"thirty","50":"fifty","oh":"oh"};
+const CONTR = {"i'm":"i am","you're":"you are","we're":"we are","it's":"it is","that's":"that is","i'll":"i will","you'll":"you will","i've":"i have","i'd":"i would","what's":"what is","here's":"here is","she's":"she is","can't":"cannot","doesn't":"does not","isn't":"is not","let's":"let us"};
+function words(s){
+  s = s.toLowerCase().replace(/[’]/g,"'").replace(/[^a-z0-9' ]/g," ");
+  let out=[]; s.split(/\s+/).filter(Boolean).forEach(w=>{ w = NUM[w]||w; (CONTR[w]||w).split(" ").forEach(x=>out.push(x)); });
+  return out;
+}
+function diff(a,b){ // LCS alignment
+  const n=a.length,m=b.length,D=[...Array(n+1)].map(()=>Array(m+1).fill(0));
+  for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)D[i][j]=a[i]===b[j]?D[i+1][j+1]+1:Math.max(D[i+1][j],D[i][j+1]);
+  const res=[];let i=0,j=0,extra=[];
+  while(i<n){ if(j<m&&a[i]===b[j]){res.push({w:a[i],ok:true});i++;j++;extra=[];}
+    else if(j<m&&D[i][j+1]>=D[i+1][j]){extra.push(b[j]);j++;}
+    else{res.push({w:a[i],ok:false,heard:extra.join(" ")});extra=[];i++;} }
+  return res;
+}
+function tipsFor(w, heard){
+  const t=[], h=heard||"";
+  if(/th/.test(w)) t.push(`<b>${w}</b>: صوت th، طلّع راس لسانك شوي بين سنانك ونفّخ. لا تقولها (ز) ولا (د) ولا (س).`);
+  if(/p/.test(w) || (/b/.test(h) && /p/.test(w))) t.push(`<b>${w}</b>: حرف P بلا صوت بالحلق، سكّر شفافك وفجّر نفَس هوا. حط إيدك قدام تمك لازم تحس بالهوا. مو B.`);
+  if(/v/.test(w)) t.push(`<b>${w}</b>: حرف V، سنانك الفوقانية على شفتك التحتانية مع اهتزاز (صوت). مو F.`);
+  if(/^(st|sp|sk|sm|sn|sl|str|spr|sch)/.test(w)) t.push(`<b>${w}</b>: ابدأ بالـ S مباشرة، بلا ألف قبلها (مو إِسْ…).`);
+  if(/^w/.test(w)) t.push(`<b>${w}</b>: حرف W، دوّر شفافك متل كأنك بدك تقول (أُو)، مو V.`);
+  if(/r/.test(w)) t.push(`<b>${w}</b>: الـ R الإنكليزية ناعمة، لسانك ما بيلمس سقف الحلق ولا بيرجف. مو (ر) عربية قوية.`);
+  if(/(ed|es|s)$/.test(w) && w.length>3) t.push(`<b>${w}</b>: لا تبلع آخر الكلمة، لفظ آخر حرف بوضوح.`);
+  if(!t.length) t.push(`<b>${w}</b>: اسمعها لحالها بالزر ▶ وعيدها ٣ مرات ببطء، بعدين ركّبها بالجملة.`);
+  return t;
+}
+let rec=null;
+function listen(target, btn, fb, after){
+  const warn=document.getElementById("micwarn");
+  if(!SR){ warn.hidden=false; warn.innerHTML="المدرّب بيحتاج <b>Google Chrome</b> (عالكمبيوتر أو أندرويد) أو Safari عالآيفون. افتح هالملف فيه."; return; }
+  if(rec){ try{rec.abort();}catch(e){} }
+  stopAll();
+  rec = new SR(); rec.lang="en-US"; rec.interimResults=false; rec.maxAlternatives=5;
+  btn.classList.add("on");
+  rec.onresult = (e)=>{
+    const tw = words(target);
+    let best=null;
+    for(const alt of e.results[0]){ const d=diff(tw, words(alt.transcript)); const sc=d.filter(x=>x.ok).length/tw.length; if(!best||sc>best.sc) best={d,sc,txt:alt.transcript}; }
+    const pct=Math.round(best.sc*100);
+    const verdict = pct>=90?"👏 ممتاز! لفظك واضح.":pct>=70?"👍 منيح، بس صلّح الكلمات الحمرا وعيد.":"🔁 عيدها. اسمع الأصل ▶ ببطء، وبعدين جرّب كمان مرة.";
+    const tips=[]; best.d.filter(x=>!x.ok).forEach(x=>tipsFor(x.w,x.heard).forEach(s=>{ if(!tips.includes(s)) tips.push(s); }));
+    fb.hidden=false;
+    fb.innerHTML = `<div><span class="score">${pct}%</span> · ${verdict}</div>
+      <div style="margin-top:6px">${best.d.map(x=>`<span class="w ${x.ok?'ok':(x.heard?'bad':'miss')}" title="${x.heard?('سمعتها: '+esc(x.heard)):(x.ok?'':'ما سمعتها')}">${esc(x.w)}</span>`).join(" ")}</div>
+      <div class="note" style="margin-top:6px">أنا سمعت: <span class="en" style="display:inline">${esc(best.txt)}</span></div>
+      ${tips.length?`<ul>${tips.slice(0,4).map(s=>`<li>${s}</li>`).join("")}</ul>`:""}
+      ${pct<90?`<div style="margin-top:8px"><button class="btn ghost slow">▶ اسمع الصح ببطء</button></div>`:""}`;
+    const sb=fb.querySelector(".slow"); if(sb) sb.onclick=(ev)=>{ ev.stopPropagation(); const r=rate.value; rate.value=0.6; say(target,()=>{rate.value=r;}); };
+    after && after();
+  };
+  rec.onerror = (e)=>{
+    fb.hidden=false;
+    fb.innerHTML = e.error==="not-allowed"||e.error==="service-not-allowed" ? "المايك مسكّر. اسمح للمتصفح يستعمل المايك (أيقونة القفل جنب العنوان) وجرّب كمان مرة. وإذا فاتح الصفحة من جوّا المحادثة، نزّل الملف وافتحو بكروم."
+      : e.error==="no-speech" ? "ما سمعت شي 🙂 اضغط 🎤 واحكي فوراً بصوت أعلى شوي."
+      : e.error==="network" ? "المدرّب بيحتاج إنترنت ليسمعك. تأكد من النت وجرّب كمان مرة."
+      : "صار خطأ بالمايك ("+e.error+"). جرّب كمان مرة.";
+  };
+  rec.onend = ()=> btn.classList.remove("on");
+  try{ rec.start(); }catch(e){ btn.classList.remove("on"); }
+}
+
+render();
+</script>
+</body>
+</html>
