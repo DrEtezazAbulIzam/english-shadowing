@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sam – احكي حر بالإنكليزي</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=Nunito:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3f1;--card:#fff;--ink:#1d2427;--mute:#68727a;--line:#dfe6e3;--acc:#1f7a64;--acc2:#e3f2ec;--fix:#fff5df;--fixInk:#8a5a00}
+@media (prefers-color-scheme:dark){:root{--bg:#121619;--card:#1c2226;--ink:#e9eeec;--mute:#93a0a6;--line:#2b3338;--acc:#55c7a6;--acc2:#1b2f29;--fix:#2e2716;--fixInk:#f0c46b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+.en{direction:ltr;text-align:left;font-family:Nunito,system-ui,sans-serif}
+.topics{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:10px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 14px;font:inherit;font-size:.92rem;cursor:pointer}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.stage{display:flex;flex-direction:column;align-items:center;text-align:center}
+#bot{width:150px;height:150px}
+#status{font-size:.88rem;padding:2px 12px;border-radius:999px;background:var(--acc2);color:var(--acc);margin:4px 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;width:100%}
+#samLine{font-size:1.35rem;font-weight:700}
+#samAr{color:var(--mute);font-size:.95rem;margin-top:4px}
+.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.btn{border:0;background:var(--acc2);color:var(--acc);border-radius:12px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer}
+.btn.main{background:var(--acc);color:#fff}
+#mic{width:78px;height:78px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:32px;cursor:pointer;box-shadow:0 6px 18px rgba(31,122,100,.35);margin:6px auto 4px;display:block}
+#mic.on{background:#d9534f;animation:pulse 1.1s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(217,83,79,.5)}70%{box-shadow:0 0 0 18px rgba(217,83,79,0)}100%{box-shadow:0 0 0 0 rgba(217,83,79,0)}}
+.micLabel{text-align:center;color:var(--mute);font-size:.9rem}
+#model{display:none;margin-top:10px;padding:10px;border-radius:12px;background:var(--bg)}
+#model.show{display:block}
+#fb{display:none}
+#fb.show{display:block}
+.w{display:inline-block;margin:2px 3px;padding:0 5px;border-radius:6px;font-family:Nunito,sans-serif}
+.ok{background:#d6f0e3;color:#14583f}.bad{background:#f9d9d6;color:#8a2219;text-decoration:underline wavy}.miss{background:#f9d9d6;color:#8a2219;opacity:.75}
+@media (prefers-color-scheme:dark){.ok{background:#1d3b31;color:#8fe0c0}.bad,.miss{background:#45221f;color:#ffb3aa}}
+.score{font-size:1.4rem;font-weight:700}
+.fix{background:var(--fix);color:var(--fixInk);border-radius:12px;padding:10px;margin-top:10px}
+.fix .en{color:var(--ink);font-weight:700;font-size:1.1rem}
+ul.tips{margin:8px 0 0;padding-inline-start:18px;text-align:right}
+.prog{color:var(--mute);font-size:.85rem}
+#warn{display:none;background:var(--fix);color:var(--fixInk);border-radius:12px;padding:10px;margin-bottom:12px}
+label.sp{font-size:.85rem;color:var(--mute)}
+#mouth{transform-origin:60px 82px}
+.talking #mouth{animation:talk .22s infinite alternate}
+@keyframes talk{from{transform:scaleY(.35)}to{transform:scaleY(1.25)}}
+.eye{animation:blink 4s infinite;transform-origin:center;transform-box:fill-box}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+#ear{opacity:0}.listening #ear{opacity:1;animation:glow 1s infinite alternate}
+@keyframes glow{from{opacity:.35}to{opacity:1}}
+#antenna{transform-origin:60px 22px}.talking #antenna{animation:wig .5s infinite alternate}
+@keyframes wig{from{transform:rotate(-8deg)}to{transform:rotate(8deg)}}
+</style>
+<style>
+#chat{width:100%;max-height:46vh;overflow:auto;padding:4px}
+.m{display:flex;margin:8px 0}.m.me{justify-content:flex-start}.m.sam{justify-content:flex-end}
+.b{max-width:85%;padding:9px 13px;border-radius:16px;font-size:1.05rem;line-height:1.5}
+.me .b{background:var(--acc);color:#fff}.sam .b{background:var(--card);border:1px solid var(--line)}
+.b .fix{font-size:.92rem;direction:rtl;text-align:right}
+.b .fix .en{font-size:1rem}
+#txt{flex:1;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px;font:inherit;direction:ltr;min-width:0}
+.bar{display:flex;gap:8px;width:100%;margin-top:8px}
+</style>
+<script src="https://js.puter.com/v2/"></script>
+</head>
+<body>
+<div class="wrap">
+ <div id="warn"></div>
+ <div class="stage">
+  <svg id="bot" viewBox="0 0 120 120" aria-label="Sam">
+      <g id="antenna"><line x1="60" y1="22" x2="60" y2="8" stroke="#3a4a52" stroke-width="3" stroke-linecap="round"/><circle cx="60" cy="7" r="5" fill="#ffb547"/></g>
+      <rect x="10" y="44" width="10" height="26" rx="5" fill="#2c8a70"/><rect x="100" y="44" width="10" height="26" rx="5" fill="#2c8a70"/>
+      <circle id="ear" cx="105" cy="57" r="11" fill="none" stroke="#ff6b6b" stroke-width="3"/>
+      <rect x="18" y="22" width="84" height="80" rx="26" fill="#55c7a6"/><rect x="26" y="32" width="68" height="60" rx="20" fill="#203038"/>
+      <ellipse class="eye" cx="46" cy="56" rx="7" ry="9" fill="#9ff3dc"/><ellipse class="eye" cx="74" cy="56" rx="7" ry="9" fill="#9ff3dc"/>
+      <circle cx="35" cy="72" r="4" fill="#ff8fa3" opacity=".6"/><circle cx="85" cy="72" r="4" fill="#ff8fa3" opacity=".6"/>
+      <ellipse id="mouth" cx="60" cy="80" rx="10" ry="5" fill="#9ff3dc"/>
+    </svg>
+  <div id="status">اضغط "يلا نحكي" 👇</div>
+  <div class="card" id="chat"></div>
+  <button id="mic" title="احكي">🎙️</button>
+  <div class="micLabel" id="micLabel">اضغط 🎙️ واحكي، ولما توقف عن الحكي Sam بيرد لحالو</div>
+  <div class="bar"><input id="txt" placeholder="…or type here" autocomplete="off"><button class="btn main" id="send">Send</button></div>
+  <div class="row">
+   <button class="btn main" id="go">يلا نحكي ▶</button>
+   <label class="sp"><input type="checkbox" id="auto" checked> اسمعني تلقائي بعد ما يحكي Sam</label>
+   <label class="sp">سرعة Sam <input type="range" id="rate" min="0.6" max="1.1" step="0.05" value="0.85"></label>
+  </div>
+ </div>
+</div>
+<script>
+const $=id=>document.getElementById(id); const bot=$("bot");
+function st(c,t){bot.classList.remove("talking","listening");if(c)bot.classList.add(c);$("status").textContent=t;}
+const synth=window.speechSynthesis; let voice=null;
+function pick(){ if(!synth) return; const v=synth.getVoices().filter(v=>/^en[-_]/i.test(v.lang)); voice=v.find(x=>/en[-_]US/i.test(x.lang)&&/Google|Samantha|Natural|Aria|Jenny/i.test(x.name))||v.find(x=>/en[-_]US/i.test(x.lang))||v[0]||null; }
+if(synth){pick();synth.onvoiceschanged=pick;}
+function say(text,rate){ return new Promise(res=>{ if(!synth){res();return;} synth.cancel(); const u=new SpeechSynthesisUtterance(text); if(voice)u.voice=voice; u.lang=voice?voice.lang:"en-US"; u.rate=rate||parseFloat($("rate").value); st("talking","Sam عم يحكي…"); u.onend=u.onerror=()=>{st(null,"دورك 🎙️");res();}; synth.speak(u); }); }
+function add(who,text,fix,tip){
+  const m=document.createElement("div"); m.className="m "+who; const b=document.createElement("div"); b.className="b";
+  const e=document.createElement("div"); e.className="en"; e.textContent=text; b.appendChild(e);
+  if(who==="sam"){ const r=document.createElement("button"); r.className="btn"; r.style.cssText="padding:2px 10px;font-size:.8rem;margin-top:6px"; r.textContent="🔊"; r.onclick=()=>say(text); b.appendChild(r);
+    const s=document.createElement("button"); s.className="btn"; s.style.cssText="padding:2px 10px;font-size:.8rem;margin:6px 6px 0"; s.textContent="🐢"; s.onclick=()=>say(text,0.65); b.appendChild(s); }
+  if(fix){ const f=document.createElement("div"); f.className="fix"; f.textContent="🔁 قولها هيك:"; const x=document.createElement("div"); x.className="en"; x.textContent=fix; f.appendChild(x);
+    const s=document.createElement("button"); s.className="btn"; s.style.cssText="padding:2px 10px;font-size:.8rem;margin-top:4px"; s.textContent="🔊 اسمعها"; s.onclick=()=>say(fix,0.8); f.appendChild(s); b.appendChild(f); }
+  if(tip){ const p=document.createElement("div"); p.style.cssText="font-size:.85rem;color:var(--mute);margin-top:4px"; p.textContent="💡 "+tip; b.appendChild(p); }
+  m.appendChild(b); $("chat").appendChild(m); $("chat").scrollTop=$("chat").scrollHeight;
+}
+const SYS=`You are "Sam", a warm, funny, friendly robot friend who chats in English with a BEGINNER learner (A1-A2), a Syrian Arabic speaker and university accounting student. Talk about ANYTHING the learner wants, like a real friend. The learner speaks through speech-to-text, so ignore punctuation/capitals, and if a word looks misheard, guess what they meant.
+Return ONLY JSON: {"reply":"...","correct":"...","tip_ar":"..."}
+- reply: very simple English, at most 2 short sentences reacting naturally, then ONE easy question to keep talking. Max 30 words.
+- correct: if the learner's LAST message has mistakes, their whole message rewritten as natural, simple, correct English (same meaning); "" if it is fine. If they used Arabic, give the English. Never explain grammar.
+- tip_ar: optional, max 10 words in Syrian Arabic (e.g. meaning of a new word you used), else "".`;
+let hist=[], busy=false, rec=null;
+function textOf(r){ if(!r) return ""; if(typeof r==="string") return r; const c=r.message&&r.message.content; if(typeof c==="string") return c; if(Array.isArray(c)) return c.map(x=>x.text||"").join(""); return r.text||String(r); }
+async function send(text){
+  text=(text||"").trim(); if(!text||busy) return; busy=true; $("txt").value="";
+  add("me",text); hist.push({role:"user",content:text}); st(null,"Sam عم يفكر… 🤔");
+  try{
+    if(!window.puter) throw new Error("no puter");
+    const r=await puter.ai.chat([{role:"system",content:SYS},...hist.slice(-14)],{model:"gpt-4o-mini"});
+    const raw=textOf(r); const j=(raw.match(/\{[\s\S]*\}/)||[null])[0];
+    let o; try{o=JSON.parse(j);}catch(e){o={reply:raw,correct:"",tip_ar:""};}
+    const reply=String(o.reply||"").trim()||"Sorry, can you say that again?";
+    hist.push({role:"assistant",content:reply}); add("sam",reply,String(o.correct||"").trim(),String(o.tip_ar||"").trim());
+    busy=false; await say(reply); if($("auto").checked) listen();
+  }catch(e){
+    hist.pop(); busy=false;
+    st(null,"ما قدر Sam يفكر 😕 تأكد إنك سجّلت دخول بـ Puter، وجرّب كمان مرة");
+    $("micLabel").textContent="إذا طلعتلك نافذة Puter، سجّل دخول أو اعمل حساب مجاني وارجع جرّب.";
+  }
+}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){ $("warn").style.display="block"; $("warn").innerHTML="المايك بيحتاج <b>Google Chrome</b>. فيك تكتب كمان."; }
+function listen(){
+  if(!SR||rec||busy) return; synth&&synth.cancel();
+  rec=new SR(); rec.lang="en-US"; rec.interimResults=true; rec.continuous=false;
+  let fin="";
+  $("mic").classList.add("on"); st("listening","Sam عم يسمعك 👂");
+  rec.onresult=e=>{ let s=""; for(const r of e.results) s+=r[0].transcript; $("micLabel").textContent="🗣️ "+s; if(e.results[e.results.length-1].isFinal) fin=s; };
+  rec.onerror=e=>{ $("micLabel").textContent= e.error==="not-allowed"?"المايك مسكّر: اضغط 🔒 جنب العنوان ← Microphone ← Allow، وحدّث الصفحة.": e.error==="no-speech"?"ما سمعت شي 🙂 اضغط 🎙️ واحكي.":"خطأ بالمايك ("+e.error+")"; };
+  rec.onend=()=>{ rec=null; $("mic").classList.remove("on"); if(fin){ $("micLabel").textContent="اضغط 🎙️ لتحكي"; send(fin);} else st(null,"دورك 🎙️"); };
+  try{rec.start();}catch(e){rec=null;$("mic").classList.remove("on");}
+}
+$("mic").onclick=()=>{ if(rec){try{rec.stop();}catch(e){} return;} listen(); };
+$("send").onclick=()=>send($("txt").value);
+$("txt").addEventListener("keydown",e=>{if(e.key==="Enter")send($("txt").value);});
+$("go").onclick=async()=>{
+  $("go").style.display="none";
+  const hi="Hi! I'm Sam, your English friend. We can talk about anything! How are you today?";
+  hist=[{role:"assistant",content:hi}]; add("sam",hi); await say(hi); if($("auto").checked) listen();
+};
+</script>
+</body>
+</html>
