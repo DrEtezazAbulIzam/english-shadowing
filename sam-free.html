@@ -62,7 +62,6 @@ label.sp{font-size:.85rem;color:var(--mute)}
 #txt{flex:1;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px;font:inherit;direction:ltr;min-width:0}
 .bar{display:flex;gap:8px;width:100%;margin-top:8px}
 </style>
-<script src="https://js.puter.com/v2/"></script>
 </head>
 <body>
 <div class="wrap">
@@ -112,22 +111,41 @@ Return ONLY JSON: {"reply":"...","correct":"...","tip_ar":"..."}
 - correct: if the learner's LAST message has mistakes, their whole message rewritten as natural, simple, correct English (same meaning); "" if it is fine. If they used Arabic, give the English. Never explain grammar.
 - tip_ar: optional, max 10 words in Syrian Arabic (e.g. meaning of a new word you used), else "".`;
 let hist=[], busy=false, rec=null;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function think(msgs){
+  const tries=[
+    async()=>{ const r=await fetch("https://text.pollinations.ai/openai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"openai",messages:msgs,referrer:"english-shadowing"})});
+      if(!r.ok) throw r.status; const d=await r.json(); return d.choices[0].message.content; },
+    async()=>{ const sys=msgs[0].content, conv=msgs.slice(1).map(m=>(m.role==="user"?"Learner: ":"Sam: ")+m.content).join("\n");
+      const r=await fetch("https://text.pollinations.ai/"+encodeURIComponent(conv+"\nSam (JSON only):")+"?model=openai&system="+encodeURIComponent(sys)+"&referrer=english-shadowing");
+      if(!r.ok) throw r.status; return await r.text(); },
+    async()=>{ const r=await fetch("https://gen.pollinations.ai/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"openai",messages:msgs})});
+      if(!r.ok) throw r.status; const d=await r.json(); return d.choices[0].message.content; }
+  ];
+  let last;
+  for(let round=0; round<2; round++){
+    for(const f of tries){ try{ const out=await f(); if(out && String(out).trim()) return String(out); }catch(e){ last=e; } }
+    st(null,"Sam عم يفكر… لحظة ⏳"); await sleep(16000);
+  }
+  throw last;
+}
+
 function textOf(r){ if(!r) return ""; if(typeof r==="string") return r; const c=r.message&&r.message.content; if(typeof c==="string") return c; if(Array.isArray(c)) return c.map(x=>x.text||"").join(""); return r.text||String(r); }
 async function send(text){
   text=(text||"").trim(); if(!text||busy) return; busy=true; $("txt").value="";
   add("me",text); hist.push({role:"user",content:text}); st(null,"Sam عم يفكر… 🤔");
   try{
-    if(!window.puter) throw new Error("no puter");
-    const r=await puter.ai.chat([{role:"system",content:SYS},...hist.slice(-14)],{model:"gpt-4o-mini"});
-    const raw=textOf(r); const j=(raw.match(/\{[\s\S]*\}/)||[null])[0];
+    const msgs=[{role:"system",content:SYS},...hist.slice(-14)];
+    const raw=await think(msgs);
+    const j=(raw.match(/\{[\s\S]*\}/)||[null])[0];
     let o; try{o=JSON.parse(j);}catch(e){o={reply:raw,correct:"",tip_ar:""};}
     const reply=String(o.reply||"").trim()||"Sorry, can you say that again?";
     hist.push({role:"assistant",content:reply}); add("sam",reply,String(o.correct||"").trim(),String(o.tip_ar||"").trim());
     busy=false; await say(reply); if($("auto").checked) listen();
   }catch(e){
     hist.pop(); busy=false;
-    st(null,"ما قدر Sam يفكر 😕 تأكد إنك سجّلت دخول بـ Puter، وجرّب كمان مرة");
-    $("micLabel").textContent="إذا طلعتلك نافذة Puter، سجّل دخول أو اعمل حساب مجاني وارجع جرّب.";
+    st(null,"ما قدر Sam يفكر 😕 ("+e+")");
+    $("micLabel").textContent="تأكد من النت، واستنى ٢٠ ثانية، وجرّب كمان مرة.";
   }
 }
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
