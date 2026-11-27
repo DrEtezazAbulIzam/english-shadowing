@@ -66,6 +66,16 @@ label.sp{font-size:.85rem;color:var(--mute)}
 <body>
 <div class="wrap">
  <div id="warn"></div>
+ <div class="card" id="keyBox" style="display:none">
+  <b>🔑 خطوة وحدة مرة وحدة: مفتاح Groq (مجاني)</b>
+  <ol style="margin:8px 0;padding-inline-start:20px;line-height:1.9">
+   <li>افتح <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a> وسجّل دخول بحساب Google.</li>
+   <li>اضغط <b>Create API Key</b>، اكتب أي اسم (مثلاً sam)، واضغط <b>Submit</b>.</li>
+   <li>اضغط <b>Copy</b>، وارجع لهون والصق المفتاح تحت 👇 واضغط حفظ.</li>
+  </ol>
+  <div class="bar"><input id="keyIn" placeholder="gsk_..." autocomplete="off"><button class="btn main" id="keySave">حفظ</button></div>
+  <div style="font-size:.82rem;color:var(--mute);margin-top:6px">المفتاح بينحفظ بس على موبايلك، وما بيروح لأي مكان تاني غير Groq.</div>
+ </div>
  <div class="stage">
   <svg id="bot" viewBox="0 0 120 120" aria-label="Sam">
       <g id="antenna"><line x1="60" y1="22" x2="60" y2="8" stroke="#3a4a52" stroke-width="3" stroke-linecap="round"/><circle cx="60" cy="7" r="5" fill="#ffb547"/></g>
@@ -84,6 +94,7 @@ label.sp{font-size:.85rem;color:var(--mute)}
   <div class="row">
    <button class="btn main" id="go">يلا نحكي ▶</button>
    <label class="sp"><input type="checkbox" id="auto" checked> اسمعني تلقائي بعد ما يحكي Sam</label>
+   <button class="btn" id="keyBtn">🔑</button>
    <label class="sp">سرعة Sam <input type="range" id="rate" min="0.6" max="1.1" step="0.05" value="0.85"></label>
   </div>
  </div>
@@ -121,12 +132,25 @@ const getq=(model)=>timed(async sig=>{ const sys=LAST[0].content, conv=LAST.slic
   const r=await fetch("https://text.pollinations.ai/"+encodeURIComponent(conv+"\nSam (JSON only):")+"?model="+model+"&system="+encodeURIComponent(sys)+"&referrer=english-shadowing",{signal:sig});
   if(!r.ok) throw r.status; const x=await r.text(); if(!x.trim()) throw "empty"; return x; },12000);
 let LAST=[];
+function getKey(){ try{ return localStorage.getItem("groq_key")||""; }catch(e){ return window._k||""; } }
+function setKey(k){ try{ localStorage.setItem("groq_key",k); }catch(e){} window._k=k; }
+const groq=(model)=>timed(async sig=>{
+  const r=await fetch("https://api.groq.com/openai/v1/chat/completions",{method:"POST",signal:sig,
+    headers:{"Content-Type":"application/json","Authorization":"Bearer "+getKey()},
+    body:JSON.stringify({model,messages:LAST,max_tokens:200,temperature:0.7,response_format:{type:"json_object"}})});
+  if(r.status===401){ $("keyBox").style.display="block"; throw "المفتاح غلط"; }
+  if(!r.ok) throw r.status; const d=await r.json(); return d.choices[0].message.content; },10000);
 async function think(msgs){
   LAST=msgs;
-  try{ return await Promise.any([post("openai-fast"), getq("openai-fast"), post("openai")]); }catch(e){}
-  st(null,"Sam عم يفكر… لحظة ⏳"); await sleep(4000);
-  return await Promise.any([post("openai"), getq("openai")]);
+  if(getKey()){
+    try{ return await groq("llama-3.3-70b-versatile"); }catch(e){ if(e==="المفتاح غلط") throw e; }
+    try{ return await groq("llama-3.1-8b-instant"); }catch(e){}
+  }
+  return await Promise.any([post("openai-fast"), getq("openai-fast"), post("openai")]);
 }
+$("keyBtn").onclick=()=>{ const k=$("keyBox"); k.style.display = k.style.display==="none" ? "block" : "none"; };
+$("keySave").onclick=()=>{ const k=$("keyIn").value.trim(); if(!/^gsk_/.test(k)){ $("keyIn").value=""; $("keyIn").placeholder="لازم يبلش بـ gsk_"; return; } setKey(k); $("keyBox").style.display="none"; st(null,"✓ انحفظ المفتاح! Sam صار سريع 🚀"); };
+if(!getKey()) $("keyBox").style.display="block";
 
 async function send(text){
   text=(text||"").trim(); if(!text||busy) return; busy=true; $("txt").value="";
@@ -141,7 +165,7 @@ async function send(text){
     busy=false; await say(reply); if($("auto").checked) listen();
   }catch(e){
     hist.pop(); busy=false;
-    st(null,"ما قدر Sam يرد هالمرة 😕 عيد جملتك");
+    st(null, e==="المفتاح غلط" ? "المفتاح غلط 🔑 حط المفتاح من جديد" : "ما قدر Sam يرد هالمرة 😕 عيد جملتك");
     $("micLabel").textContent="تأكد من النت، واستنى ٢٠ ثانية، وجرّب كمان مرة.";
   }
 }
