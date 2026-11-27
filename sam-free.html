@@ -94,7 +94,9 @@ function st(c,t){bot.classList.remove("talking","listening");if(c)bot.classList.
 const synth=window.speechSynthesis; let voice=null;
 function pick(){ if(!synth) return; const v=synth.getVoices().filter(v=>/^en[-_]/i.test(v.lang)); voice=v.find(x=>/en[-_]US/i.test(x.lang)&&/Google|Samantha|Natural|Aria|Jenny/i.test(x.name))||v.find(x=>/en[-_]US/i.test(x.lang))||v[0]||null; }
 if(synth){pick();synth.onvoiceschanged=pick;}
-function say(text,rate){ return new Promise(res=>{ if(!synth){res();return;} synth.cancel(); const u=new SpeechSynthesisUtterance(text); if(voice)u.voice=voice; u.lang=voice?voice.lang:"en-US"; u.rate=rate||parseFloat($("rate").value); st("talking","Sam عم يحكي…"); u.onend=u.onerror=()=>{st(null,"دورك 🎙️");res();}; synth.speak(u); }); }
+function say(text,rate){ return new Promise(res=>{ if(!synth){res();return;} synth.cancel(); const u=new SpeechSynthesisUtterance(text); if(voice)u.voice=voice; u.lang=voice?voice.lang:"en-US"; u.rate=rate||parseFloat($("rate").value); st("talking","Sam عم يحكي…"); let done=false; const fin=()=>{ if(done) return; done=true; clearTimeout(guard); st(null,"دورك 🎙️"); res(); };
+  const guard=setTimeout(()=>{ synth.cancel(); fin(); }, 2500+text.split(/\s+/).length*650/(u.rate||1));
+  u.onend=u.onerror=fin; synth.speak(u); }); }
 function add(who,text,fix,tip){
   const m=document.createElement("div"); m.className="m "+who; const b=document.createElement("div"); b.className="b";
   const e=document.createElement("div"); e.className="en"; e.textContent=text; b.appendChild(e);
@@ -107,35 +109,30 @@ function add(who,text,fix,tip){
 }
 const SYS=`You are "Sam", a warm, funny, friendly robot friend who chats in English with a BEGINNER learner (A1-A2), a Syrian Arabic speaker and university accounting student. Talk about ANYTHING the learner wants, like a real friend. The learner speaks through speech-to-text, so ignore punctuation/capitals, and if a word looks misheard, guess what they meant.
 Return ONLY JSON: {"reply":"...","correct":"...","tip_ar":"..."}
-- reply: very simple English, at most 2 short sentences reacting naturally, then ONE easy question to keep talking. Max 30 words.
+- reply: very simple English, at most 2 short sentences reacting naturally, then ONE easy question to keep talking. Max 25 words.
 - correct: if the learner's LAST message has mistakes, their whole message rewritten as natural, simple, correct English (same meaning); "" if it is fine. If they used Arabic, give the English. Never explain grammar.
 - tip_ar: optional, max 10 words in Syrian Arabic (e.g. meaning of a new word you used), else "".`;
 let hist=[], busy=false, rec=null;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function timed(fn,ms){ const c=new AbortController(); const id=setTimeout(()=>c.abort(),ms); return fn(c.signal).finally(()=>clearTimeout(id)); }
+const post=(model)=>timed(async sig=>{ const r=await fetch("https://text.pollinations.ai/openai",{method:"POST",signal:sig,headers:{"Content-Type":"application/json"},body:JSON.stringify({model,messages:LAST,max_tokens:150,referrer:"english-shadowing"})});
+  if(!r.ok) throw r.status; const d=await r.json(); const c=d.choices[0].message.content; if(!c) throw "empty"; return c; },12000);
+const getq=(model)=>timed(async sig=>{ const sys=LAST[0].content, conv=LAST.slice(1).map(m=>(m.role==="user"?"Learner: ":"Sam: ")+m.content).join("\n");
+  const r=await fetch("https://text.pollinations.ai/"+encodeURIComponent(conv+"\nSam (JSON only):")+"?model="+model+"&system="+encodeURIComponent(sys)+"&referrer=english-shadowing",{signal:sig});
+  if(!r.ok) throw r.status; const x=await r.text(); if(!x.trim()) throw "empty"; return x; },12000);
+let LAST=[];
 async function think(msgs){
-  const tries=[
-    async()=>{ const r=await fetch("https://text.pollinations.ai/openai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"openai",messages:msgs,referrer:"english-shadowing"})});
-      if(!r.ok) throw r.status; const d=await r.json(); return d.choices[0].message.content; },
-    async()=>{ const sys=msgs[0].content, conv=msgs.slice(1).map(m=>(m.role==="user"?"Learner: ":"Sam: ")+m.content).join("\n");
-      const r=await fetch("https://text.pollinations.ai/"+encodeURIComponent(conv+"\nSam (JSON only):")+"?model=openai&system="+encodeURIComponent(sys)+"&referrer=english-shadowing");
-      if(!r.ok) throw r.status; return await r.text(); },
-    async()=>{ const r=await fetch("https://gen.pollinations.ai/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"openai",messages:msgs})});
-      if(!r.ok) throw r.status; const d=await r.json(); return d.choices[0].message.content; }
-  ];
-  let last;
-  for(let round=0; round<2; round++){
-    for(const f of tries){ try{ const out=await f(); if(out && String(out).trim()) return String(out); }catch(e){ last=e; } }
-    st(null,"Sam عم يفكر… لحظة ⏳"); await sleep(16000);
-  }
-  throw last;
+  LAST=msgs;
+  try{ return await Promise.any([post("openai-fast"), getq("openai-fast"), post("openai")]); }catch(e){}
+  st(null,"Sam عم يفكر… لحظة ⏳"); await sleep(4000);
+  return await Promise.any([post("openai"), getq("openai")]);
 }
 
-function textOf(r){ if(!r) return ""; if(typeof r==="string") return r; const c=r.message&&r.message.content; if(typeof c==="string") return c; if(Array.isArray(c)) return c.map(x=>x.text||"").join(""); return r.text||String(r); }
 async function send(text){
   text=(text||"").trim(); if(!text||busy) return; busy=true; $("txt").value="";
   add("me",text); hist.push({role:"user",content:text}); st(null,"Sam عم يفكر… 🤔");
   try{
-    const msgs=[{role:"system",content:SYS},...hist.slice(-14)];
+    const msgs=[{role:"system",content:SYS},...hist.slice(-8)];
     const raw=await think(msgs);
     const j=(raw.match(/\{[\s\S]*\}/)||[null])[0];
     let o; try{o=JSON.parse(j);}catch(e){o={reply:raw,correct:"",tip_ar:""};}
@@ -144,7 +141,7 @@ async function send(text){
     busy=false; await say(reply); if($("auto").checked) listen();
   }catch(e){
     hist.pop(); busy=false;
-    st(null,"ما قدر Sam يفكر 😕 ("+e+")");
+    st(null,"ما قدر Sam يرد هالمرة 😕 عيد جملتك");
     $("micLabel").textContent="تأكد من النت، واستنى ٢٠ ثانية، وجرّب كمان مرة.";
   }
 }
