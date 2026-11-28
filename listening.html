@@ -52,33 +52,7 @@ label.sp{font-size:.85rem;color:var(--mute)}
 </div>
 <div id="score"></div>
 <script>
-const SECTIONS = [
- {id:"num", tab:"١. الأرقام", title:"13 ولا 30؟", how:"اسمع الرقم واختار يلي سمعتو. انتبه للضغطة: thirTEEN بالآخر، THIRty بالأول.",
-  type:"choice", items:[["thirteen",["13","30"],0],["forty",["14","40"],1],["fifteen",["15","50"],0],["sixty",["16","60"],1],["seventeen",["17","70"],0],["eighty",["18","80"],1],["nineteen",["19","90"],0],["fifty",["15","50"],1],["fourteen",["14","40"],0],["seventy",["17","70"],1]]},
- {id:"write", tab:"٢. اكتب الرقم", title:"اكتب الرقم يلي بتسمعو", how:"اكتب الرقم بالأرقام (مثلاً 47).",
-  type:"text", items:[["twenty-eight","28"],["thirty-three","33"],["forty-one","41"],["sixty-four","64"],["seventy-two","72"],["eighty-five","85"],["ninety-nine","99"],["a hundred","100"],["twelve","12"],["fifty-six","56"]]},
- {id:"phone", tab:"٣. أرقام تلفون", title:"اكتب رقم التلفون", how:"oh يعني صفر، و double two يعني 22. اكتب الأرقام بس بلا فراغات.",
-  type:"text", items:[["oh nine four four, two five six, seven eight one","0944256781"],["oh two eight, nine oh one, double three six","028901336"],["oh nine three three, double seven, oh, four, five, double nine","09337704599"],["oh one three one, four nine six, oh six three eight","01314960638"],["oh nine five five, one two three, double eight, four","0955123884"]]},
- {id:"spell", tab:"٤. التهجئة", title:"How do you spell it?", how:"اسمع الأحرف واكتب الكلمة.",
-  type:"text", items:[["W, A, L, K, E, R","walker"],["H, A, double D, A, D","haddad"],["J, E, N, N, Y","jenny"],["G, A, R, C, I, A","garcia"],["B, I, R, T, H, D, A, Y","birthday"],["Q, U, E, E, N","queen"],["Y, O, U, S, E, F","yousef"],["J, A, P, A, N","japan"]]},
- {id:"hs", tab:"٥. he ولا she؟", title:"he ولا she؟", how:"اسمع الجملة واختار شو سمعت.",
-  type:"choice", items:[["Is she from Egypt?",["Is he from Egypt?","Is she from Egypt?"],1],["He's from Turkey.",["He's from Turkey.","She's from Turkey."],0],["Where's she from?",["Where's he from?","Where's she from?"],1],["He's nice.",["He's nice.","She's nice."],0],["Is he American?",["Is he American?","Is she American?"],0],["She isn't Spanish.",["He isn't Spanish.","She isn't Spanish."],1]]},
- {id:"conv", tab:"٦. محادثات", title:"اسمع المحادثة وجاوب", how:"اسمع المحادثة كلها، وبعدين جاوب الأسئلة. فيك تفتح النص بعد ما تجاوب.",
-  type:"conv", items:[
-   {name:"بالفندق 🏨", lines:[["A","Good evening. How can I help you?"],["B","Hi. I have a reservation. My name's Sami Haddad."],["A","Sorry, how do you spell your surname?"],["B","H, A, double D, A, D."],["A","Thank you, Mr Haddad. You're in room two one four."],["B","Thanks."],["A","Have a nice evening."]],
-    qs:[["Is it morning or evening?",["morning","evening"],1],["His surname is…",["Hadad","Haddad"],1],["His room is…",["214","240"],0]]},
-   {name:"حجز طاولة 🍽️", lines:[["A","Hello, Luna Restaurant."],["B","Hi. A table for Friday, please."],["A","For how many people?"],["B","For four."],["A","What time?"],["B","Eight o'clock."],["A","And your name, please?"],["B","Maria Lopez."],["A","OK. Friday at eight, a table for four."],["B","That's right. Thank you."]],
-    qs:[["The day is…",["Thursday","Friday"],1],["How many people?",["4","3"],0],["What time?",["8:00","9:00"],0]]},
-   {name:"بالمقهى ☕", lines:[["A","Excuse me, are these seats free?"],["B","Yes, please sit down."],["A","Thanks. I'm Tom, and this is Anna. We're from Canada."],["B","Nice to meet you. I'm Ali. I'm from Egypt."],["A","Are you on holiday?"],["B","No, I'm not. I'm a student here. Are you on holiday?"],["A","No, we aren't. We're on business."]],
-    qs:[["Tom and Anna are from…",["the USA","Canada"],1],["Ali is…",["a student","a teacher"],0],["Are Tom and Anna on holiday?",["Yes, they are.","No, they aren't."],1]]},
-   {name:"معلومات شخصية 📝", lines:[["A","What's your first name?"],["B","Laila."],["A","How do you spell it?"],["B","L, A, I, L, A."],["A","And how old are you?"],["B","I'm twenty-three."],["A","What's your phone number?"],["B","It's oh nine four four, five six seven, eight one two."],["A","And what's your email?"],["B","It's laila twenty-three at gmail dot com."],["A","Thank you."]],
-    qs:[["How old is Laila?",["23","33"],0],["Her phone number is…",["0944 567 812","0944 576 812"],0],["Her email is…",["laila33@gmail.com","laila23@gmail.com"],1]]},
-   {name:"صاحب جديد 👋", lines:[["A","Hi Sally! How are you?"],["B","I'm fine, thanks. Oh, this is Amy. She's a friend from work."],["A","Hi Amy. Nice to meet you."],["C","Nice to meet you too."],["A","Oh no! Look at the time. I'm late for work."],["B","See you later, Adam."],["C","Goodbye."]],
-    qs:[["Amy is…",["Sally's sister","Sally's friend from work"],1],["Adam is…",["late for work","on holiday"],0],["How is Sally?",["She's fine.","She's tired."],0]]}
-  ]},
- {id:"dict", tab:"٧. إملاء", title:"اكتب الجملة يلي بتسمعها", how:"اسمع واكتب الجملة كاملة. ما بتفرق الأحرف الكبيرة والنقاط.",
-  type:"dict", items:["Where are you from?","She isn't Spanish. She's Mexican.","How old are you?","We're late for work.","Nice to meet you too.","What's your email address?","They aren't English. They're American.","Sorry, can you repeat that, please?"]}
-];
+const SECTIONS = [{"id": "num", "tab": "١. الأرقام", "title": "13 ولا 30؟", "how": "اسمع الرقم واختار يلي سمعتو. انتبه للضغطة: thirTEEN بالآخر، THIRty بالأول.", "type": "choice", "items": [["thirteen", ["13", "30"], 0], ["forty", ["14", "40"], 1], ["fifteen", ["15", "50"], 0], ["sixty", ["16", "60"], 1], ["seventeen", ["17", "70"], 0], ["eighty", ["18", "80"], 1], ["nineteen", ["19", "90"], 0], ["fifty", ["15", "50"], 1], ["fourteen", ["14", "40"], 0], ["seventy", ["17", "70"], 1]]}, {"id": "write", "tab": "٢. اكتب الرقم", "title": "اكتب الرقم يلي بتسمعو", "how": "اكتب الرقم بالأرقام (مثلاً 47).", "type": "text", "items": [["twenty-eight", "28"], ["thirty-three", "33"], ["forty-one", "41"], ["sixty-four", "64"], ["seventy-two", "72"], ["eighty-five", "85"], ["ninety-nine", "99"], ["a hundred", "100"], ["twelve", "12"], ["fifty-six", "56"]]}, {"id": "phone", "tab": "٣. أرقام تلفون", "title": "اكتب رقم التلفون", "how": "oh يعني صفر، و double two يعني 22. اكتب الأرقام بس بلا فراغات.", "type": "text", "items": [["oh nine four four, two five six, seven eight one", "0944256781"], ["oh two eight, nine oh one, double three six", "028901336"], ["oh nine three three, double seven, oh, four, five, double nine", "09337704599"], ["oh one three one, four nine six, oh six three eight", "01314960638"], ["oh nine five five, one two three, double eight, four", "0955123884"]]}, {"id": "spell", "tab": "٤. التهجئة", "title": "How do you spell it?", "how": "اسمع الأحرف واكتب الكلمة.", "type": "text", "items": [["W, A, L, K, E, R", "walker"], ["H, A, double D, A, D", "haddad"], ["J, E, N, N, Y", "jenny"], ["G, A, R, C, I, A", "garcia"], ["B, I, R, T, H, D, A, Y", "birthday"], ["Q, U, E, E, N", "queen"], ["Y, O, U, S, E, F", "yousef"], ["J, A, P, A, N", "japan"]]}, {"id": "hs", "tab": "٥. he ولا she؟", "title": "he ولا she؟", "how": "اسمع الجملة واختار شو سمعت.", "type": "choice", "items": [["Is she from Egypt?", ["Is he from Egypt?", "Is she from Egypt?"], 1], ["He's from Turkey.", ["He's from Turkey.", "She's from Turkey."], 0], ["Where's she from?", ["Where's he from?", "Where's she from?"], 1], ["He's nice.", ["He's nice.", "She's nice."], 0], ["Is he American?", ["Is he American?", "Is she American?"], 0], ["She isn't Spanish.", ["He isn't Spanish.", "She isn't Spanish."], 1]]}, {"id": "conv", "tab": "٦. محادثات", "title": "اسمع المحادثة وجاوب", "how": "اسمع المحادثة كلها، وبعدين جاوب الأسئلة. فيك تفتح النص بعد ما تجاوب.", "type": "conv", "items": [{"name": "بالفندق 🏨", "lines": [["A", "Good evening. How can I help you?"], ["B", "Hi. I have a reservation. My name's Sami Haddad."], ["A", "Sorry, how do you spell your surname?"], ["B", "H, A, double D, A, D."], ["A", "Thank you, Mr Haddad. You're in room two one four."], ["B", "Thanks."], ["A", "Have a nice evening."]], "qs": [["Is it morning or evening?", ["morning", "evening"], 1], ["His surname is…", ["Hadad", "Haddad"], 1], ["His room is…", ["214", "240"], 0]]}, {"name": "حجز طاولة 🍽️", "lines": [["A", "Hello, Luna Restaurant."], ["B", "Hi. A table for Friday, please."], ["A", "For how many people?"], ["B", "For four."], ["A", "What time?"], ["B", "Eight o'clock."], ["A", "And your name, please?"], ["B", "Maria Lopez."], ["A", "OK. Friday at eight, a table for four."], ["B", "That's right. Thank you."]], "qs": [["The day is…", ["Thursday", "Friday"], 1], ["How many people?", ["4", "3"], 0], ["What time?", ["8:00", "9:00"], 0]], "voices": {"A": "am_michael", "B": "af_heart"}}, {"name": "بالمقهى ☕", "lines": [["A", "Excuse me, are these seats free?"], ["B", "Yes, please sit down."], ["A", "Thanks. I'm Tom, and this is Anna. We're from Canada."], ["B", "Nice to meet you. I'm Ali. I'm from Egypt."], ["A", "Are you on holiday?"], ["B", "No, I'm not. I'm a student here. Are you on holiday?"], ["A", "No, we aren't. We're on business."]], "qs": [["Tom and Anna are from…", ["the USA", "Canada"], 1], ["Ali is…", ["a student", "a teacher"], 0], ["Are Tom and Anna on holiday?", ["Yes, they are.", "No, they aren't."], 1]], "voices": {"A": "am_michael", "B": "am_eric"}}, {"name": "معلومات شخصية 📝", "lines": [["A", "What's your first name?"], ["B", "Laila."], ["A", "How do you spell it?"], ["B", "L, A, I, L, A."], ["A", "And how old are you?"], ["B", "I'm twenty-three."], ["A", "What's your phone number?"], ["B", "It's oh nine four four, five six seven, eight one two."], ["A", "And what's your email?"], ["B", "It's laila twenty-three at gmail dot com."], ["A", "Thank you."]], "qs": [["How old is Laila?", ["23", "33"], 0], ["Her phone number is…", ["0944 567 812", "0944 576 812"], 0], ["Her email is…", ["laila33@gmail.com", "laila23@gmail.com"], 1]], "voices": {"A": "am_michael", "B": "af_heart"}}, {"name": "صاحب جديد 👋", "lines": [["A", "Hi Sally! How are you?"], ["B", "I'm fine, thanks. Oh, this is Amy. She's a friend from work."], ["A", "Hi Amy. Nice to meet you."], ["C", "Nice to meet you too."], ["A", "Oh no! Look at the time. I'm late for work."], ["B", "See you later, Adam."], ["C", "Goodbye."]], "qs": [["Amy is…", ["Sally's sister", "Sally's friend from work"], 1], ["Adam is…", ["late for work", "on holiday"], 0], ["How is Sally?", ["She's fine.", "She's tired."], 0]], "voices": {"A": "am_michael", "B": "af_heart", "C": "bf_emma"}}]}, {"id": "dict", "tab": "٧. إملاء", "title": "اكتب الجملة يلي بتسمعها", "how": "اسمع واكتب الجملة كاملة. ما بتفرق الأحرف الكبيرة والنقاط.", "type": "dict", "items": ["Where are you from?", "She isn't Spanish. She's Mexican.", "How old are you?", "We're late for work.", "Nice to meet you too.", "What's your email address?", "They aren't English. They're American.", "Sorry, can you repeat that, please?"]}];
 const $=id=>document.getElementById(id);
 const synth=window.speechSynthesis; let vA=null,vB=null;
 function pick(){ if(!synth) return; const v=synth.getVoices().filter(x=>/^en[-_]/i.test(x.lang)); const us=v.filter(x=>/en[-_](US|GB)/i.test(x.lang));
@@ -89,9 +63,27 @@ function speakQueue(parts){ // parts: [{text,v,pitch}]
   if(!synth) return; synth.cancel();
   parts.forEach(p=>{ const u=new SpeechSynthesisUtterance(p.text); const vv=p.v||vA; if(vv){u.voice=vv;u.lang=vv.lang;} else u.lang="en-US"; u.rate=rate()*(p.slow?0.7:1); u.pitch=p.pitch||1; synth.speak(u); });
 }
-const say=(t,slow)=>speakQueue([{text:t,slow}]);
+const sayTTS=(t,slow)=>speakQueue([{text:t,slow}]);
+const curRate=()=>rate();
+// ---- real audio files (MP3) with browser voice as backup ----
+function fnv(s){ let h=0x811c9dc5; for(const c of new TextEncoder().encode(s)){ h^=c; h=Math.imul(h,0x01000193)>>>0; } return h.toString(16).padStart(8,"0"); }
+const DEFV={A:"af_heart",B:"am_michael",C:"bf_emma"};
+const vOf=(s,vs)=>(vs&&vs[s])||DEFV[s]||"af_heart";
+const convKey=(lines,vs)=>fnv("CONV|"+lines.map(l=>vOf(l[0],vs)+":"+l[1]).join("\n"));
+const AU=new Audio(); AU.preload="auto";
+function playFile(key, slow, fallback){
+  try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+  AU.pause(); AU.src="audio/"+key+".mp3";
+  const base=(typeof curRate==="function")?curRate():1;
+  AU.playbackRate=Math.max(0.5,base*(slow?0.75:1));
+  let failed=false; const fb=()=>{ if(failed) return; failed=true; fallback&&fallback(); };
+  AU.onerror=fb; const p=AU.play(); if(p&&p.catch) p.catch(e=>{ if(e&&e.name!=="AbortError") fb(); });
+}
+
+const say=(t,slow)=>playFile(fnv("af_heart|"+t),slow,()=>sayTTS(t,slow));
 const VOICE={A:{v:null,p:1.15},B:{v:null,p:0.85},C:{v:null,p:1.35}};
-function playConv(lines,slow){ speakQueue(lines.map(([s,t])=>({text:t,slow,v:s==="B"?vB:vA,pitch:VOICE[s].p}))); }
+function playConvTTS(lines,slow){ speakQueue(lines.map(([s,t])=>({text:t,slow,v:s==="B"?vB:vA,pitch:VOICE[s].p}))); }
+function playConv(lines,slow,vs){ playFile(convKey(lines,vs),slow,()=>playConvTTS(lines,slow)); }
 function norm(s){ return String(s).toLowerCase().replace(/[’]/g,"'").replace(/[^a-z0-9' ]/g," ").replace(/\s+/g," ").trim(); }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 let cur=0; const score={};
@@ -124,8 +116,8 @@ function wire(S){
   if(S.type==="conv"){
     document.querySelectorAll("[data-c]").forEach(card=>{
       const c=S.items[+card.dataset.c];
-      card.querySelector('[data-a="cp"]').onclick=()=>playConv(c.lines,false);
-      card.querySelector('[data-a="cs"]').onclick=()=>playConv(c.lines,true);
+      card.querySelector('[data-a="cp"]').onclick=()=>playConv(c.lines,false,c.voices);
+      card.querySelector('[data-a="cs"]').onclick=()=>playConv(c.lines,true,c.voices);
       card.querySelector('[data-a="sc"]').onclick=e=>{ e.target.nextElementSibling.classList.toggle("show"); };
       card.querySelectorAll("[data-q]").forEach(row=>{ const q=c.qs[+row.dataset.q]; const key=`conv-${card.dataset.c}-${row.dataset.q}`;
         row.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{ const right=+b.dataset.j===q[2]; if(!(key in score)) score[key]=right;
