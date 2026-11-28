@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Listening – الوحدة 1 و 2</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f1fa;--card:#fff;--ink:#1f2330;--mute:#6b6f7c;--line:#e4e0ee;--acc:#6a3fa0;--acc2:#efe8f8;--ok:#1f8a5b;--okb:#e2f5ec;--no:#c0392b;--nob:#fbe4e1}
+@media (prefers-color-scheme:dark){:root{--bg:#15141a;--card:#1f1e27;--ink:#ecebf2;--mute:#9b98a8;--line:#2e2c38;--acc:#b892f0;--acc2:#2a2338;--ok:#5fd3a0;--okb:#173328;--no:#ff8a7a;--nob:#3a1f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:680px;margin:0 auto;padding:16px 14px 80px}
+h1{font-size:1.35rem;margin:0}
+.sub{color:var(--mute);margin:2px 0 12px;font-size:.92rem}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px}
+.tabs button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:.88rem;cursor:pointer}
+.tabs button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.card h2{margin:0 0 4px;font-size:1.1rem}
+.how{color:var(--mute);font-size:.9rem;margin:0 0 10px}
+.item{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.item:first-of-type{border-top:0}
+.num{font-weight:700;color:var(--mute);width:22px}
+.play{width:44px;height:44px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:17px;cursor:pointer;flex:none}
+.slow{width:36px;height:36px;border-radius:50%;border:0;background:var(--acc2);color:var(--acc);cursor:pointer;flex:none}
+.opt{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:8px 14px;font-family:Nunito,sans-serif;font-size:1.05rem;cursor:pointer;direction:ltr}
+.opt.ok{background:var(--okb);border-color:var(--ok);color:var(--ok)}
+.opt.no{background:var(--nob);border-color:var(--no);color:var(--no)}
+input.ans{flex:1;min-width:140px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:9px 12px;font-family:Nunito,sans-serif;font-size:1.05rem;direction:ltr}
+.chk{border:0;background:var(--acc2);color:var(--acc);border-radius:10px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer}
+.res{width:100%;font-size:.92rem}
+.res.ok{color:var(--ok)}.res.no{color:var(--no)}
+.res .en{font-family:Nunito,sans-serif;direction:ltr;display:inline-block}
+.q{width:100%;font-family:Nunito,sans-serif;direction:ltr;text-align:left;font-size:1.02rem}
+.opts{display:flex;gap:8px;flex-wrap:wrap;width:100%;direction:ltr}
+.script{display:none;background:var(--bg);border-radius:12px;padding:10px;margin-top:10px;direction:ltr;text-align:left;font-family:Nunito,sans-serif}
+.script.show{display:block}
+.script b{color:var(--acc)}
+.ghost{border:0;background:none;color:var(--acc);font:inherit;cursor:pointer;padding:4px 0;text-decoration:underline}
+#score{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);padding:10px 14px;text-align:center;font-weight:700}
+.bigplay{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+label.sp{font-size:.85rem;color:var(--mute)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎧 استماع: الوحدة 1 و 2</h1>
+  <p class="sub">اضغط ▶ واسمع، وبعدين جاوب. فيك تسمع قد ما بدك، و🐢 للبطيء. <label class="sp">السرعة <input type="range" id="rate" min="0.6" max="1.1" step="0.05" value="0.9"></label></p>
+  <div class="tabs" id="tabs"></div>
+  <div id="sec"></div>
+</div>
+<div id="score"></div>
+<script>
+const SECTIONS = [
+ {id:"num", tab:"١. الأرقام", title:"13 ولا 30؟", how:"اسمع الرقم واختار يلي سمعتو. انتبه للضغطة: thirTEEN بالآخر، THIRty بالأول.",
+  type:"choice", items:[["thirteen",["13","30"],0],["forty",["14","40"],1],["fifteen",["15","50"],0],["sixty",["16","60"],1],["seventeen",["17","70"],0],["eighty",["18","80"],1],["nineteen",["19","90"],0],["fifty",["15","50"],1],["fourteen",["14","40"],0],["seventy",["17","70"],1]]},
+ {id:"write", tab:"٢. اكتب الرقم", title:"اكتب الرقم يلي بتسمعو", how:"اكتب الرقم بالأرقام (مثلاً 47).",
+  type:"text", items:[["twenty-eight","28"],["thirty-three","33"],["forty-one","41"],["sixty-four","64"],["seventy-two","72"],["eighty-five","85"],["ninety-nine","99"],["a hundred","100"],["twelve","12"],["fifty-six","56"]]},
+ {id:"phone", tab:"٣. أرقام تلفون", title:"اكتب رقم التلفون", how:"oh يعني صفر، و double two يعني 22. اكتب الأرقام بس بلا فراغات.",
+  type:"text", items:[["oh nine four four, two five six, seven eight one","0944256781"],["oh two eight, nine oh one, double three six","028901336"],["oh nine three three, double seven, oh, four, five, double nine","09337704599"],["oh one three one, four nine six, oh six three eight","01314960638"],["oh nine five five, one two three, double eight, four","0955123884"]]},
+ {id:"spell", tab:"٤. التهجئة", title:"How do you spell it?", how:"اسمع الأحرف واكتب الكلمة.",
+  type:"text", items:[["W, A, L, K, E, R","walker"],["H, A, double D, A, D","haddad"],["J, E, N, N, Y","jenny"],["G, A, R, C, I, A","garcia"],["B, I, R, T, H, D, A, Y","birthday"],["Q, U, E, E, N","queen"],["Y, O, U, S, E, F","yousef"],["J, A, P, A, N","japan"]]},
+ {id:"hs", tab:"٥. he ولا she؟", title:"he ولا she؟", how:"اسمع الجملة واختار شو سمعت.",
+  type:"choice", items:[["Is she from Egypt?",["Is he from Egypt?","Is she from Egypt?"],1],["He's from Turkey.",["He's from Turkey.","She's from Turkey."],0],["Where's she from?",["Where's he from?","Where's she from?"],1],["He's nice.",["He's nice.","She's nice."],0],["Is he American?",["Is he American?","Is she American?"],0],["She isn't Spanish.",["He isn't Spanish.","She isn't Spanish."],1]]},
+ {id:"conv", tab:"٦. محادثات", title:"اسمع المحادثة وجاوب", how:"اسمع المحادثة كلها، وبعدين جاوب الأسئلة. فيك تفتح النص بعد ما تجاوب.",
+  type:"conv", items:[
+   {name:"بالفندق 🏨", lines:[["A","Good evening. How can I help you?"],["B","Hi. I have a reservation. My name's Sami Haddad."],["A","Sorry, how do you spell your surname?"],["B","H, A, double D, A, D."],["A","Thank you, Mr Haddad. You're in room two one four."],["B","Thanks."],["A","Have a nice evening."]],
+    qs:[["Is it morning or evening?",["morning","evening"],1],["His surname is…",["Hadad","Haddad"],1],["His room is…",["214","240"],0]]},
+   {name:"حجز طاولة 🍽️", lines:[["A","Hello, Luna Restaurant."],["B","Hi. A table for Friday, please."],["A","For how many people?"],["B","For four."],["A","What time?"],["B","Eight o'clock."],["A","And your name, please?"],["B","Maria Lopez."],["A","OK. Friday at eight, a table for four."],["B","That's right. Thank you."]],
+    qs:[["The day is…",["Thursday","Friday"],1],["How many people?",["4","3"],0],["What time?",["8:00","9:00"],0]]},
+   {name:"بالمقهى ☕", lines:[["A","Excuse me, are these seats free?"],["B","Yes, please sit down."],["A","Thanks. I'm Tom, and this is Anna. We're from Canada."],["B","Nice to meet you. I'm Ali. I'm from Egypt."],["A","Are you on holiday?"],["B","No, I'm not. I'm a student here. Are you on holiday?"],["A","No, we aren't. We're on business."]],
+    qs:[["Tom and Anna are from…",["the USA","Canada"],1],["Ali is…",["a student","a teacher"],0],["Are Tom and Anna on holiday?",["Yes, they are.","No, they aren't."],1]]},
+   {name:"معلومات شخصية 📝", lines:[["A","What's your first name?"],["B","Laila."],["A","How do you spell it?"],["B","L, A, I, L, A."],["A","And how old are you?"],["B","I'm twenty-three."],["A","What's your phone number?"],["B","It's oh nine four four, five six seven, eight one two."],["A","And what's your email?"],["B","It's laila twenty-three at gmail dot com."],["A","Thank you."]],
+    qs:[["How old is Laila?",["23","33"],0],["Her phone number is…",["0944 567 812","0944 576 812"],0],["Her email is…",["laila33@gmail.com","laila23@gmail.com"],1]]},
+   {name:"صاحب جديد 👋", lines:[["A","Hi Sally! How are you?"],["B","I'm fine, thanks. Oh, this is Amy. She's a friend from work."],["A","Hi Amy. Nice to meet you."],["C","Nice to meet you too."],["A","Oh no! Look at the time. I'm late for work."],["B","See you later, Adam."],["C","Goodbye."]],
+    qs:[["Amy is…",["Sally's sister","Sally's friend from work"],1],["Adam is…",["late for work","on holiday"],0],["How is Sally?",["She's fine.","She's tired."],0]]}
+  ]},
+ {id:"dict", tab:"٧. إملاء", title:"اكتب الجملة يلي بتسمعها", how:"اسمع واكتب الجملة كاملة. ما بتفرق الأحرف الكبيرة والنقاط.",
+  type:"dict", items:["Where are you from?","She isn't Spanish. She's Mexican.","How old are you?","We're late for work.","Nice to meet you too.","What's your email address?","They aren't English. They're American.","Sorry, can you repeat that, please?"]}
+];
+const $=id=>document.getElementById(id);
+const synth=window.speechSynthesis; let vA=null,vB=null;
+function pick(){ if(!synth) return; const v=synth.getVoices().filter(x=>/^en[-_]/i.test(x.lang)); const us=v.filter(x=>/en[-_](US|GB)/i.test(x.lang));
+  const pool=us.length?us:v; vA=pool.find(x=>/female|Samantha|Aria|Jenny|Zira|Google US/i.test(x.name))||pool[0]||null; vB=pool.find(x=>x!==vA&&/male|Daniel|Guy|David|UK/i.test(x.name))||pool.find(x=>x!==vA)||vA; }
+if(synth){pick(); synth.onvoiceschanged=pick;}
+const rate=()=>parseFloat($("rate").value);
+function speakQueue(parts){ // parts: [{text,v,pitch}]
+  if(!synth) return; synth.cancel();
+  parts.forEach(p=>{ const u=new SpeechSynthesisUtterance(p.text); const vv=p.v||vA; if(vv){u.voice=vv;u.lang=vv.lang;} else u.lang="en-US"; u.rate=rate()*(p.slow?0.7:1); u.pitch=p.pitch||1; synth.speak(u); });
+}
+const say=(t,slow)=>speakQueue([{text:t,slow}]);
+const VOICE={A:{v:null,p:1.15},B:{v:null,p:0.85},C:{v:null,p:1.35}};
+function playConv(lines,slow){ speakQueue(lines.map(([s,t])=>({text:t,slow,v:s==="B"?vB:vA,pitch:VOICE[s].p}))); }
+function norm(s){ return String(s).toLowerCase().replace(/[’]/g,"'").replace(/[^a-z0-9' ]/g," ").replace(/\s+/g," ").trim(); }
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+let cur=0; const score={};
+function setScore(){ let ok=0,all=0; Object.values(score).forEach(v=>{all++; if(v) ok++;}); $("score").textContent=all?`✓ صح: ${ok} من ${all}`:"جاوب، وهون بتشوف علامتك 🎯"; }
+function playBtns(fn){ return `<button class="play" data-a="p">▶</button><button class="slow" data-a="s">🐢</button>`; }
+function render(){
+  $("tabs").innerHTML=SECTIONS.map((s,i)=>`<button class="${i===cur?'on':''}" data-i="${i}">${s.tab}</button>`).join("");
+  document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{cur=+b.dataset.i;render();window.scrollTo(0,0);});
+  const S=SECTIONS[cur]; let h=`<div class="card"><h2>${S.title}</h2><p class="how">${S.how}</p>`;
+  if(S.type==="choice"){
+    S.items.forEach((it,i)=>{ h+=`<div class="item" data-i="${i}"><span class="num">${i+1}</span>${playBtns()}<div class="opts">${it[1].map((o,j)=>`<button class="opt" data-j="${j}">${esc(o)}</button>`).join("")}</div><div class="res"></div></div>`; });
+  } else if(S.type==="text"){
+    S.items.forEach((it,i)=>{ h+=`<div class="item" data-i="${i}"><span class="num">${i+1}</span>${playBtns()}<input class="ans" inputmode="${S.id==='spell'?'text':'numeric'}" autocomplete="off"><button class="chk">✓</button><div class="res"></div></div>`; });
+  } else if(S.type==="dict"){
+    S.items.forEach((it,i)=>{ h+=`<div class="item" data-i="${i}"><span class="num">${i+1}</span>${playBtns()}<input class="ans" autocomplete="off" autocapitalize="off"><button class="chk">✓</button><div class="res"></div></div>`; });
+  }
+  h+=`</div>`;
+  if(S.type==="conv"){
+    h="";
+    S.items.forEach((c,ci)=>{
+      h+=`<div class="card" data-c="${ci}"><h2>${c.name}</h2><div class="bigplay"><button class="play" data-a="cp">▶</button><button class="slow" data-a="cs">🐢</button><span class="how" style="margin:0">اسمع المحادثة</span></div>`;
+      c.qs.forEach((q,qi)=>{ h+=`<div class="item" data-q="${qi}"><span class="num">${qi+1}</span><div class="q">${esc(q[0])}</div><div class="opts">${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${esc(o)}</button>`).join("")}</div><div class="res"></div></div>`; });
+      h+=`<button class="ghost" data-a="sc">📄 شوف النص</button><div class="script">${c.lines.map(([s,t])=>`<div><b>${s}:</b> ${esc(t)}</div>`).join("")}</div></div>`;
+    });
+    h=`<p class="how">${S.how}</p>`+h;
+  }
+  $("sec").innerHTML=h; wire(S); setScore();
+}
+function wire(S){
+  if(S.type==="conv"){
+    document.querySelectorAll("[data-c]").forEach(card=>{
+      const c=S.items[+card.dataset.c];
+      card.querySelector('[data-a="cp"]').onclick=()=>playConv(c.lines,false);
+      card.querySelector('[data-a="cs"]').onclick=()=>playConv(c.lines,true);
+      card.querySelector('[data-a="sc"]').onclick=e=>{ e.target.nextElementSibling.classList.toggle("show"); };
+      card.querySelectorAll("[data-q]").forEach(row=>{ const q=c.qs[+row.dataset.q]; const key=`conv-${card.dataset.c}-${row.dataset.q}`;
+        row.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{ const right=+b.dataset.j===q[2]; if(!(key in score)) score[key]=right;
+          row.querySelectorAll(".opt").forEach(x=>x.classList.remove("ok","no")); b.classList.add(right?"ok":"no");
+          const r=row.querySelector(".res"); r.className="res "+(right?"ok":"no"); r.textContent=right?"✓ صح!":"✗ مو هيك، اسمع كمان مرة"; setScore(); }); });
+    }); return;
+  }
+  document.querySelectorAll("#sec .item").forEach(row=>{
+    const i=+row.dataset.i, it=S.items[i], key=S.id+"-"+i;
+    const text = S.type==="dict" ? it : it[0];
+    row.querySelector('[data-a="p"]').onclick=()=>say(text,false);
+    row.querySelector('[data-a="s"]').onclick=()=>say(text,true);
+    const res=row.querySelector(".res");
+    if(S.type==="choice"){
+      row.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{ const right=+b.dataset.j===it[2]; if(!(key in score)) score[key]=right;
+        row.querySelectorAll(".opt").forEach(x=>x.classList.remove("ok","no")); b.classList.add(right?"ok":"no");
+        res.className="res "+(right?"ok":"no"); res.textContent=right?"✓ صح!":"✗ لا، اسمع كمان مرة"; setScore(); });
+    } else {
+      const inp=row.querySelector(".ans"), go=()=>{
+        const v=norm(inp.value); if(!v) return;
+        let right, show;
+        if(S.type==="dict"){ const a=norm(it).split(" "), b=v.split(" "); right=a.join(" ")===b.join(" "); show=it;
+          if(!right){ const miss=a.filter((w,k)=>w!==b[k]); res.innerHTML=`✗ قربت! الصح: <span class="en">${esc(it)}</span><br>انتبه لـ: <span class="en">${esc(miss.slice(0,4).join(", "))}</span>`; } }
+        else { right = v.replace(/\s/g,"")===String(it[1]).toLowerCase(); show=it[1]; }
+        if(!(key in score)) score[key]=right;
+        if(right) res.innerHTML="✓ ممتاز!"; else if(S.type!=="dict") res.innerHTML=`✗ الصح: <span class="en">${esc(show)}</span>`;
+        res.className="res "+(right?"ok":"no"); setScore(); };
+      row.querySelector(".chk").onclick=go; inp.addEventListener("keydown",e=>{if(e.key==="Enter")go();});
+    }
+  });
+}
+render();
+</script>
+</body>
+</html>
