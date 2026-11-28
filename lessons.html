@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دروس English File – خطوة خطوة</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f1fa;--card:#fff;--ink:#1f2330;--mute:#6b6f7c;--line:#e4e0ee;--acc:#6a3fa0;--acc2:#efe8f8;--ok:#1f8a5b;--okb:#e2f5ec;--no:#c0392b;--nob:#fbe4e1;--tip:#fff6e0;--tipInk:#8a5a00}
+@media (prefers-color-scheme:dark){:root{--bg:#15141a;--card:#1f1e27;--ink:#ecebf2;--mute:#9b98a8;--line:#2e2c38;--acc:#b892f0;--acc2:#2a2338;--ok:#5fd3a0;--okb:#173328;--no:#ff8a7a;--nob:#3a1f1c;--tip:#2e2716;--tipInk:#f0c46b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;line-height:1.65}
+.wrap{max-width:680px;margin:0 auto;padding:14px 14px 80px}
+.en{font-family:Nunito,system-ui,sans-serif;direction:ltr;unicode-bidi:isolate}
+.top{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px}
+.top button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-weight:700;cursor:pointer}
+.top button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.hero{background:var(--acc);color:#fff;border-radius:18px;padding:16px;margin-bottom:12px}
+.hero h1{margin:0;font-size:1.35rem}
+.hero p{margin:4px 0 0;opacity:.9;font-size:.92rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.card h2{margin:0 0 6px;font-size:1.08rem}
+.how{color:var(--mute);font-size:.9rem;margin:0 0 8px}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.v{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:8px;cursor:pointer;background:var(--bg)}
+.v .e{font-family:Nunito,sans-serif;font-weight:700;direction:ltr}
+.v .a{font-size:.82rem;color:var(--mute)}
+.ic{width:30px;height:30px;border-radius:50%;background:var(--acc2);color:var(--acc);display:flex;align-items:center;justify-content:center;flex:none;font-size:13px}
+.line{display:flex;gap:10px;padding:7px 0;border-top:1px solid var(--line);align-items:flex-start}
+.line:first-of-type{border-top:0}
+.sp{font-family:Nunito,sans-serif;font-weight:700;color:var(--acc);min-width:52px;direction:ltr;text-align:left}
+.line .t{flex:1}
+.line .e2{font-family:Nunito,sans-serif;direction:ltr;text-align:left;font-size:1.05rem}
+.line .a2{font-size:.85rem;color:var(--mute)}
+.hideAr .a2{display:none}.hideEn .e2{filter:blur(6px)}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.btn{border:0;background:var(--acc);color:#fff;border-radius:10px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer}
+.btn.l{background:var(--acc2);color:var(--acc)}
+.rule{background:var(--bg);border-radius:12px;padding:10px 12px;margin:8px 0}
+.rule .row{display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px dashed var(--line)}
+.rule .row:last-child{border-bottom:0}
+.tip{background:var(--tip);color:var(--tipInk);border-radius:12px;padding:10px 12px;margin-top:8px;font-size:.92rem}
+.snd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 0;border-top:1px solid var(--line)}
+.snd:first-of-type{border-top:0}
+.snd b{min-width:60px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:3px 11px;font-family:Nunito,sans-serif;cursor:pointer;direction:ltr}
+.item{display:flex;gap:8px;align-items:center;padding:9px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.item:first-of-type{border-top:0}
+.num{font-weight:700;color:var(--mute);width:20px}
+.play{width:42px;height:42px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:16px;cursor:pointer;flex:none}
+.slow{width:34px;height:34px;border-radius:50%;border:0;background:var(--acc2);color:var(--acc);cursor:pointer;flex:none}
+.opts{display:flex;gap:8px;flex-wrap:wrap;direction:ltr}
+.opt{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:7px 13px;font-family:Nunito,sans-serif;font-size:1rem;cursor:pointer}
+.opt.ok{background:var(--okb);border-color:var(--ok);color:var(--ok)}.opt.no{background:var(--nob);border-color:var(--no);color:var(--no)}
+input.ans{flex:1;min-width:130px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:8px 11px;font-family:Nunito,sans-serif;font-size:1rem;direction:ltr}
+.chk{border:0;background:var(--acc2);color:var(--acc);border-radius:10px;padding:8px 13px;font:inherit;font-weight:700;cursor:pointer}
+.res{width:100%;font-size:.9rem}.res.ok{color:var(--ok)}.res.no{color:var(--no)}
+.q{width:100%;font-family:Nunito,sans-serif;direction:ltr;text-align:left}
+.ex h3{font-size:.98rem;margin:12px 0 2px}
+.ex h3:first-child{margin-top:0}
+#score{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);padding:10px 14px;text-align:center;font-weight:700}
+#score.good{background:var(--okb);color:var(--ok)}
+.speak{background:var(--acc2);border-radius:16px;padding:14px}
+.speak .en{display:block;font-size:1.05rem;font-weight:700;margin:4px 0}
+label.rt{font-size:.85rem;color:var(--mute);display:flex;align-items:center;gap:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top" id="top"></div>
+  <div id="lesson"></div>
+</div>
+<div id="score"></div>
+<script>
+const LESSONS = [{"id": "1A", "title": "Hello!", "ar": "مرحبا! التعارف · الفعل am / are · الأرقام 0–10 · أيام الأسبوع", "names": {"A": "Karim", "B": "Lina"}, "vocab": [{"title": "التحيات", "words": [["Hello", "مرحبا"], ["Hi", "أهلين"], ["Goodbye", "مع السلامة"], ["Bye", "باي"], ["Nice to meet you.", "تشرفت فيك"], ["Nice to meet you too.", "وأنا كمان تشرفت"], ["See you tomorrow.", "منشوفك بكرا"], ["See you on Friday.", "منشوفك يوم الجمعة"], ["Yes", "إي"], ["No", "لا"], ["Very good!", "منيح كتير!"], ["Sorry", "آسف"]]}, {"title": "الأرقام 0–10", "words": [["zero", "0"], ["one", "1"], ["two", "2"], ["three", "3"], ["four", "4"], ["five", "5"], ["six", "6"], ["seven", "7"], ["eight", "8"], ["nine", "9"], ["ten", "10"], ["eleven", "11"]]}, {"title": "أيام الأسبوع (دايماً بحرف كبير)", "words": [["Monday", "الاتنين"], ["Tuesday", "التلاتا"], ["Wednesday", "الأربعا"], ["Thursday", "الخميس"], ["Friday", "الجمعة"], ["Saturday", "السبت"], ["Sunday", "الأحد"]]}], "dialogue": [["A", "Hello. Are you Maria?", "مرحبا. إنتِ ماريا؟"], ["B", "No, I'm not. I'm Lina.", "لا، مو أنا. أنا لينا."], ["A", "Oh, sorry! I'm Karim.", "أوه، آسف! أنا كريم."], ["B", "Nice to meet you, Karim.", "تشرفت فيك يا كريم."], ["A", "Nice to meet you too. Are you a student?", "وأنا كمان. إنتِ طالبة؟"], ["B", "Yes, I am. And you?", "إي. وإنت؟"], ["A", "I'm a student too.", "أنا كمان طالب."], ["B", "Very good! Bye, Karim. See you on Monday.", "حلو كتير! باي كريم. منشوفك يوم الاتنين."], ["A", "Goodbye, Lina.", "مع السلامة لينا."]], "grammar": "\n<p>الفعل <b class=\"en\">be<\/b> يعني \"يكون\". بالعربي ما منقولو، بس بالإنكليزي <b>لازم<\/b> ينحط.<\/p>\n<div class=\"rule\">\n <div class=\"row\"><span class=\"en\"><b>I am<\/b> = <b>I'm<\/b> Lina.<\/span><span>أنا لينا<\/span><\/div>\n <div class=\"row\"><span class=\"en\"><b>You are<\/b> = <b>You're<\/b> Karim.<\/span><span>إنت كريم<\/span><\/div>\n<\/div>\n<p><b>النفي:<\/b> منزيد <b class=\"en\">not<\/b><\/p>\n<div class=\"rule\">\n <div class=\"row\"><span class=\"en\">I'm <b>not<\/b> Maria.<\/span><span>أنا مو ماريا<\/span><\/div>\n <div class=\"row\"><span class=\"en\">You <b>aren't<\/b> Harry.<\/span><span>إنت مو هاري<\/span><\/div>\n<\/div>\n<p><b>السؤال:<\/b> منقلب الترتيب، و <b class=\"en\">Are<\/b> بتصير بالأول<\/p>\n<div class=\"rule\">\n <div class=\"row\"><span class=\"en\">You are Lina. → <b>Are you<\/b> Lina?<\/span><span>إنتِ لينا؟<\/span><\/div>\n <div class=\"row\"><span class=\"en\">Yes, I am. / No, I'm not.<\/span><span>إي / لا<\/span><\/div>\n<\/div>\n<div class=\"tip\">⚠️ منقول <b class=\"en\">Yes, I am.<\/b> كاملة، وما منقول <span class=\"en\">Yes, I'm.<\/span><br>⚠️ ما منقول <span class=\"en\">I'm is<\/span> ولا <span class=\"en\">I am Lina is<\/span>، الفعل مرة وحدة بس.<\/div>\n", "pron": [["/h/", ["house", "hello", "hi", "Harry"]], ["/aɪ/", ["bike", "I'm", "nice", "five", "bye", "Friday"]], ["/iː/", ["tree", "meet", "see", "three"]]], "pronTip": "حرف <b class=\"en\">h<\/b> بالإنكليزي ناعم متل (هـ) العربية، مو (ح). و <b class=\"en\">ee<\/b> صوت (إي) طويل: <span class=\"en\">meet, see, three<\/span>.", "ex": [{"title": "١. اكتب الرقم", "how": "اسمع واكتب الرقم.", "type": "text", "numeric": true, "items": [["seven", "7"], ["three", "3"], ["ten", "10"], ["zero", "0"], ["eight", "8"], ["four", "4"], ["nine", "9"], ["eleven", "11"]]}, {"title": "٢. أي يوم؟", "how": "اسمع واختار اليوم.", "type": "choice", "items": [["Thursday", ["Tuesday", "Thursday"], 1], ["Wednesday", ["Wednesday", "Monday"], 0], ["Saturday", ["Sunday", "Saturday"], 1], ["Tuesday", ["Tuesday", "Thursday"], 0], ["Friday", ["Friday", "Monday"], 0]]}, {"title": "٣. اكتب اليوم", "how": "اسمع واكتب اليوم بالإنكليزي (انتبه للإملاء).", "type": "text", "items": [["Monday", "monday"], ["Wednesday", "wednesday"], ["Thursday", "thursday"], ["Sunday", "sunday"]]}, {"title": "٤. شو سمعت؟", "how": "اختار الجملة يلي سمعتها.", "type": "choice", "items": [["I'm Lina.", ["I'm Lina.", "You're Lina."], 0], ["You're Karim.", ["I'm Karim.", "You're Karim."], 1], ["No, I'm not.", ["No, I'm not.", "No, you aren't."], 0], ["Are you Maria?", ["You're Maria.", "Are you Maria?"], 1], ["See you on Friday.", ["See you on Friday.", "See you on Monday."], 0]]}, {"title": "٥. محادثة جديدة", "how": "اسمع المحادثة وجاوب.", "type": "conv", "lines": [["A", "Hi. I'm Sam."], ["B", "Hello, Sam. I'm Nour. Nice to meet you."], ["A", "Nice to meet you too. Are you a teacher?"], ["B", "No, I'm not. I'm a student."], ["A", "Me too! See you tomorrow, Nour."], ["B", "Bye, Sam. See you tomorrow."]], "qs": [["His name is…", ["Sam", "Tom"], 0], ["Is she a teacher?", ["Yes, she is.", "No, she isn't."], 1], ["See you…", ["on Friday", "tomorrow"], 1]]}, {"title": "٦. إملاء", "how": "اسمع واكتب الجملة كاملة.", "type": "dict", "items": ["Nice to meet you.", "Are you Lina?", "No, I'm not.", "Yes, I am.", "See you on Friday.", "I'm a student."]}], "speak": ["Hi! I'm Claude. What's your name?", "Are you a student?", "Are you from Syria?", "What day is it today?", "Bye! See you tomorrow!"]}];
+const $=id=>document.getElementById(id);
+const synth=window.speechSynthesis; let vA=null,vB=null;
+function pick(){ if(!synth) return; const v=synth.getVoices().filter(x=>/^en[-_]/i.test(x.lang)); const us=v.filter(x=>/en[-_](US|GB)/i.test(x.lang)); const pool=us.length?us:v;
+  vA=pool.find(x=>/female|Samantha|Aria|Jenny|Zira|Google US/i.test(x.name))||pool[0]||null; vB=pool.find(x=>x!==vA&&/male|Daniel|Guy|David|UK/i.test(x.name))||pool.find(x=>x!==vA)||vA; }
+if(synth){pick(); synth.onvoiceschanged=pick;}
+let RATE=0.9;
+function queue(parts){ if(!synth) return; synth.cancel(); parts.forEach(p=>{ const u=new SpeechSynthesisUtterance(p.text); const vv=p.v||vA; if(vv){u.voice=vv;u.lang=vv.lang;} else u.lang="en-US"; u.rate=RATE*(p.slow?0.7:1); u.pitch=p.pitch||1; synth.speak(u); }); }
+const say=(t,slow)=>queue([{text:t,slow}]);
+const PITCH={A:1.12,B:0.88,C:1.3};
+const conv=(lines,slow)=>queue(lines.map(l=>({text:l[1],slow,v:l[0]==="B"?vB:vA,pitch:PITCH[l[0]]||1})));
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function norm(s){return String(s).toLowerCase().replace(/[’]/g,"'").replace(/[^a-z0-9' ]/g," ").replace(/\s+/g," ").trim();}
+let cur = LESSONS.length-1, score={};
+try{ const s=localStorage.getItem("lesson_cur"); if(s!==null && LESSONS[+s]) cur=+s; }catch(e){}
+function setScore(){ const L=LESSONS[cur]; let ok=0,all=0; Object.entries(score).forEach(([k,v])=>{ if(k.startsWith(L.id+":")){all++; if(v) ok++;} });
+  const total=L.ex.reduce((n,e)=>n+(e.type==="conv"?e.qs.length:e.items.length),0); const pct=total?Math.round(ok/total*100):0;
+  $("score").className = pct>=80 ? "good" : "";
+  $("score").textContent = all ? `🎯 ${ok} صح من ${total} (${pct}%) ${pct>=80?"— أتقنت الدرس! 🎉 قول لـ Claude":"— لازم 80% لننتقل"}` : "جاوب التمارين، وهون بتشوف علامتك 🎯"; }
+function render(){
+  try{ localStorage.setItem("lesson_cur",cur); }catch(e){}
+  $("top").innerHTML=LESSONS.map((l,i)=>`<button class="${i===cur?'on':''}" data-i="${i}">${esc(l.id)}</button>`).join("");
+  document.querySelectorAll("#top button").forEach(b=>b.onclick=()=>{cur=+b.dataset.i; render(); scrollTo(0,0);});
+  const L=LESSONS[cur]; let h="";
+  h+=`<div class="hero"><h1>${esc(L.id)} · <span class="en">${esc(L.title)}</span></h1><p>${esc(L.ar)}</p></div>`;
+  h+=`<div class="card"><label class="rt">🔊 السرعة <input type="range" id="rate" min="0.6" max="1.1" step="0.05" value="${RATE}"></label></div>`;
+  // vocab
+  L.vocab.forEach(g=>{ h+=`<div class="card"><h2>📝 ${esc(g.title)}</h2><p class="how">اضغط على الكلمة لتسمعها، وعيدها بصوت عالي.</p><div class="vgrid">${g.words.map(w=>`<div class="v" data-say="${esc(w[0])}"><span class="ic">🔊</span><div><div class="e">${esc(w[0])}</div><div class="a">${esc(w[1])}</div></div></div>`).join("")}</div></div>`; });
+  // dialogue
+  h+=`<div class="card" id="dlg"><h2>🎧 المحادثة</h2><p class="how">١) اسمع مع العربي. ٢) خبّي العربي واسمع. ٣) خبّي الإنكليزي وعيد ورا كل جملة.</p>
+   <div class="btns"><button class="btn" id="dPlay">▶ اسمع كلها</button><button class="btn l" id="dSlow">🐢 ببطء</button><button class="btn l" id="tAr">خبّي العربي</button><button class="btn l" id="tEn">خبّي الإنكليزي</button></div><div id="dl">`;
+  L.dialogue.forEach(([s,e,a],i)=>{ h+=`<div class="line" data-i="${i}"><span class="sp">${esc(L.names[s]||s)}</span><div class="t"><div class="e2">${esc(e)}</div><div class="a2">${esc(a)}</div></div><span class="ic" data-l="${i}">🔊</span></div>`; });
+  h+=`</div></div>`;
+  // grammar
+  h+=`<div class="card"><h2>📏 القاعدة</h2>${L.grammar}</div>`;
+  // pronunciation
+  h+=`<div class="card"><h2>👄 اللفظ</h2><p class="how">اضغط على كل كلمة، اسمعها، وعيدها ٣ مرات.</p>${L.pron.map(p=>`<div class="snd"><b>${esc(p[0])}</b>${p[1].map(w=>`<button class="chip" data-say="${esc(w)}">${esc(w)}</button>`).join("")}</div>`).join("")}${L.pronTip?`<div class="tip">💡 ${L.pronTip}</div>`:""}</div>`;
+  // exercises
+  h+=`<div class="card ex"><h2>🎧 تمارين الاستماع</h2>`;
+  L.ex.forEach((E,ei)=>{
+    h+=`<h3>${esc(E.title)}</h3><p class="how">${esc(E.how)}</p>`;
+    if(E.type==="conv"){
+      h+=`<div class="btns"><button class="btn" data-cv="${ei}">▶ اسمع</button><button class="btn l" data-cvs="${ei}">🐢</button></div>`;
+      E.qs.forEach((q,qi)=>{ h+=`<div class="item" data-e="${ei}" data-k="${qi}"><span class="num">${qi+1}</span><div class="q">${esc(q[0])}</div><div class="opts">${q[1].map((o,j)=>`<button class="opt" data-j="${j}">${esc(o)}</button>`).join("")}</div><div class="res"></div></div>`; });
+    } else E.items.forEach((it,i)=>{
+      h+=`<div class="item" data-e="${ei}" data-k="${i}"><span class="num">${i+1}</span><button class="play" data-p>▶</button><button class="slow" data-s>🐢</button>`;
+      if(E.type==="choice") h+=`<div class="opts">${it[1].map((o,j)=>`<button class="opt" data-j="${j}">${esc(o)}</button>`).join("")}</div>`;
+      else h+=`<input class="ans" autocomplete="off" autocapitalize="off" ${E.numeric?'inputmode="numeric"':''}><button class="chk">✓</button>`;
+      h+=`<div class="res"></div></div>`; });
+  });
+  h+=`</div>`;
+  h+=`<div class="card speak"><h2>🗣️ احكي مع Claude</h2><p class="how">ارجع للمحادثة مع Claude، وجاوب على هالأسئلة بصوتك (🎤 الكيبورد) أو كتابة:</p>${L.speak.map(s=>`<span class="en">${esc(s)}</span>`).join("")}</div>`;
+  $("lesson").innerHTML=h; wire(L); setScore();
+}
+function wire(L){
+  $("rate").oninput=e=>RATE=parseFloat(e.target.value);
+  document.querySelectorAll("[data-say]").forEach(el=>el.onclick=()=>say(el.dataset.say,false));
+  $("dPlay").onclick=()=>conv(L.dialogue,false); $("dSlow").onclick=()=>conv(L.dialogue,true);
+  $("tAr").onclick=()=>$("dl").classList.toggle("hideAr"); $("tEn").onclick=()=>$("dl").classList.toggle("hideEn");
+  document.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{ const d=L.dialogue[+b.dataset.l]; queue([{text:d[1],v:d[0]==="B"?vB:vA,pitch:PITCH[d[0]]||1}]); });
+  document.querySelectorAll("[data-cv]").forEach(b=>b.onclick=()=>conv(L.ex[+b.dataset.cv].lines,false));
+  document.querySelectorAll("[data-cvs]").forEach(b=>b.onclick=()=>conv(L.ex[+b.dataset.cvs].lines,true));
+  document.querySelectorAll(".item").forEach(row=>{
+    const E=L.ex[+row.dataset.e], k=+row.dataset.k, key=`${L.id}:${row.dataset.e}:${k}`, res=row.querySelector(".res");
+    const mark=(right,msg)=>{ if(!(key in score)) score[key]=right; res.className="res "+(right?"ok":"no"); res.innerHTML=msg; setScore(); };
+    if(E.type==="conv"){ const q=E.qs[k];
+      row.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{ const r=+b.dataset.j===q[2]; row.querySelectorAll(".opt").forEach(x=>x.classList.remove("ok","no")); b.classList.add(r?"ok":"no"); mark(r, r?"✓ صح!":"✗ اسمع كمان مرة"); }); return; }
+    const it=E.items[k], text=E.type==="dict"?it:it[0];
+    row.querySelector("[data-p]").onclick=()=>say(text,false); row.querySelector("[data-s]").onclick=()=>say(text,true);
+    if(E.type==="choice"){ row.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{ const r=+b.dataset.j===it[2]; row.querySelectorAll(".opt").forEach(x=>x.classList.remove("ok","no")); b.classList.add(r?"ok":"no"); mark(r, r?"✓ صح!":"✗ لا، اسمع كمان مرة"); }); }
+    else { const inp=row.querySelector(".ans"); const go=()=>{ const v=norm(inp.value); if(!v) return;
+        const target=E.type==="dict"?it:it[1]; const r=E.numeric? v.replace(/\s/g,"")===String(target) : v===norm(target);
+        mark(r, r?"✓ ممتاز!":`✗ الصح: <span class="en">${esc(target)}</span>`); };
+      row.querySelector(".chk").onclick=go; inp.addEventListener("keydown",e=>{if(e.key==="Enter")go();}); }
+  });
+}
+render();
+</script>
+</body>
+</html>
